@@ -25,6 +25,7 @@ import actors.Invader;
 import actors.Player;
 import actors.Shot;
 import actors.Ufo;
+import game.MooseTheGame;
 
 public class Invaders extends Stage implements KeyListener {
 

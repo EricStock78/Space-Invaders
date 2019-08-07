@@ -17,7 +17,6 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private static final long serialVersionUID = 1L;
 
-
     private InputHandler keyPressedHandlerLeft;
     private InputHandler keyReleasedHandlerLeft;
 
@@ -261,5 +260,9 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.drawString("ENTER: try again", (xPos < 0 ? 0 : xPos), getHeight() / 2 + 50);
 
         strategy.show();
+    }
+
+    public void paintMainMenu() {
+
     }
 }
