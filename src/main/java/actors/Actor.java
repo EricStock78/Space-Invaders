@@ -75,7 +75,7 @@ public class Actor {
 		tileImage = false;
 	}
 			
-	public void paint(Graphics g) {		
+	public  void paint(Graphics g) {
 		if( debugCollision ) {
 			int horizOffset = (width - collisionWidth) / 2;
 			int vertOffset = (height - collisionHeight) / 2;
