@@ -1,90 +1,86 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package actors;
 
 import game.Stage;
+
 import java.awt.event.KeyEvent;
 
-/**
- *
- * @author Eric
- */
 public class Car extends Actor implements KeyboardControllable {
+    private boolean up,down,left,right;
 
-    public enum ePlayerNumber {
-        PN_ONE,
-        PN_TWO,
-    };
 
-    private ePlayerNumber playerNumber;
-
-    public Car(Stage canvas, ePlayerNumber playerNo) {
-        super(canvas, 125,56, 125,56);
-        playerNumber = playerNo;
-        sprites = new String[]{"car.png"};
+    public Car(Stage stage) {
+        super(stage, 256, 256, 256, 256);
+        sprites = new String[]{"Car.png"};
         frame = 0;
-        posY = Stage.HEIGHT / 2;
-
-        if( playerNumber == ePlayerNumber.PN_ONE) {
-            posX = 0;
-        }
-        else {
-            posX = Stage.WIDTH - getWidth() -10;
-        }
+        frameSpeed = 35;
+        actorSpeed = 10;
+        posX = Stage.WIDTH/2 - 128;
+        posY = Stage.HEIGHT/2 - 128;
     }
 
     public void update() {
         super.update();
-        posY += vy * 3;
-
-        if( posY > Stage.HEIGHT - getHeight() ) {
-            posY = Stage.HEIGHT - getHeight();
-        }
-        else if( posY < 0 ) {
-            posY = 0;
-        }
+        updateSpeed();
     }
 
-    @Override
-    public void triggerKeyPress(KeyEvent e) {
-        if( playerNumber == ePlayerNumber.PN_ONE) {
-            if( e.getKeyCode() == KeyEvent.VK_S) {
-                vy = 1;
-            }
-            else if( e.getKeyCode() == KeyEvent.VK_W) {
-                vy = -1;
-            }
-        }
-        else {
-            if( e.getKeyCode() == KeyEvent.VK_DOWN) {
-                vy = 1;
-            }
-            else if( e.getKeyCode() == KeyEvent.VK_UP) {
-                vy = -1;
-            }
-        }
+    protected void updateSpeed() {
+        vx = 0;
+        vy = 0;
+        if (down)
+            vy = actorSpeed;
+        if (up)
+            vy = -actorSpeed;
+        if (left)
+            vx = -actorSpeed;
+        if (right)
+            vx = actorSpeed;
+
+        //don't allow scrolling off the edge of the screen
+        if (posX - getWidth()/2 > 0 && vx < 0)
+            posX += vx;
+        else if (posX + getWidth()  + (getWidth()/2)< Stage.WIDTH && vx > 0)
+            posX += vx;
+
+        if (posY - getHeight()/2 > 0 && vy < 0)
+            posY += vy;
+        else if (posY + getHeight() + (getHeight()/2) < Stage.HEIGHT && vy > 0)
+            posY += vy;
     }
 
-    @Override
     public void triggerKeyRelease(KeyEvent e) {
-        if( playerNumber == ePlayerNumber.PN_ONE) {
-            if( e.getKeyCode() == KeyEvent.VK_S) {
-                vy = 0;
-            }
-            else if( e.getKeyCode() == KeyEvent.VK_W) {
-                vy = 0;
-            }
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_DOWN:
+                down = false;
+                break;
+            case KeyEvent.VK_UP:
+                up = false;
+                break;
+            case KeyEvent.VK_LEFT:
+                left = false;
+                break;
+            case KeyEvent.VK_RIGHT:
+                right = false;
+                break;
         }
-        else {
-            if( e.getKeyCode() == KeyEvent.VK_DOWN) {
-                vy = 0;
-            }
-            else if( e.getKeyCode() == KeyEvent.VK_UP) {
-                vy = 0;
-            }
+    }
+
+    public void triggerKeyPress(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            ///*
+            case KeyEvent.VK_UP:
+                up = true;
+                break;
+            //*/
+            case KeyEvent.VK_LEFT:
+                left = true;
+                break;
+            case KeyEvent.VK_RIGHT:
+                right = true;
+                break;
+            ///*
+            case KeyEvent.VK_DOWN:
+                down = true;
+                break;
         }
     }
 }

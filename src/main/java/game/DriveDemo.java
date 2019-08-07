@@ -36,7 +36,7 @@ public class DriveDemo extends Stage implements KeyListener {
     private int splatFrames;
 
 
-    private Car car;
+    private EricsCar ericsCar;
     //private Paddle paddleRight;
     //rivate Ball ball;
 
@@ -75,9 +75,9 @@ public class DriveDemo extends Stage implements KeyListener {
         requestFocus();
         initWorld();
 
-        keyPressedHandlerLeft = new InputHandler(this, car);
+        keyPressedHandlerLeft = new InputHandler(this, ericsCar);
         keyPressedHandlerLeft.action = InputHandler.Action.PRESS;
-        keyReleasedHandlerLeft = new InputHandler(this, car);
+        keyReleasedHandlerLeft = new InputHandler(this, ericsCar);
         keyReleasedHandlerLeft.action = InputHandler.Action.RELSEASE;
 
         //keyPressedHandlerRight = new InputHandler(this, paddleRight);
@@ -90,7 +90,7 @@ public class DriveDemo extends Stage implements KeyListener {
 
 
     public void initWorld() {
-        car = new Car(this, Car.ePlayerNumber.PN_ONE);
+        ericsCar = new EricsCar(this, EricsCar.ePlayerNumber.PN_ONE);
 
         tnt = new TNT(this);
         //paddleRight = new Paddle(this, Paddle.ePlayerNumber.PN_TWO);
@@ -119,7 +119,7 @@ public class DriveDemo extends Stage implements KeyListener {
             actor.paint(g);
         }
 
-        car.paint(g);
+        ericsCar.paint(g);
 
         tnt.paint(g);
 
@@ -149,7 +149,7 @@ public class DriveDemo extends Stage implements KeyListener {
         roadHorizontalOffset += 10;
         roadHorizontalOffset %= Stage.WIDTH;
 
-        car.update();
+        ericsCar.update();
 
         tnt.update();
 
@@ -167,19 +167,19 @@ public class DriveDemo extends Stage implements KeyListener {
 
     private void checkCollision() {
 
-        if( car.getBounds().intersects(tnt.getBounds())) {
+        if( ericsCar.getBounds().intersects(tnt.getBounds())) {
             if( splat == null) {
                 splat = new Splat(this);
-                splat.setX(car.getX());
-                splat.setY(car.getY());
+                splat.setX(ericsCar.getX());
+                splat.setY(ericsCar.getY());
 
                 splatFrames = 0;
             }
         }
 
 
-        //if( ball.getBounds().intersects(car.getBounds())) {
-        //    ball.collision(car);
+        //if( ball.getBounds().intersects(ericsCar.getBounds())) {
+        //    ball.collision(ericsCar);
         //} //else if( ball.getBounds().intersects(paddleRight.getBounds())) {
         //  ball.collision(paddleRight);
         //}
