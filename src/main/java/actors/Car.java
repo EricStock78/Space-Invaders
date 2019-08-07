@@ -3,16 +3,20 @@ package actors;
 import game.Stage;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class Car extends Actor implements KeyboardControllable {
     private boolean up,down,left,right;
-    public enum ePlayerNumber {
-        PN_ONE,}
+    private boolean isWASD;
+    private ArrayList<String> cars = new ArrayList<>();// to be used to select between cars
 
 
     public Car(Stage stage) {
-        super(stage, 256, 256, 256, 256);
-        sprites = new String[]{"Car.png"};
+
+        super(stage, 145, 73, 145, 73);
+        cars.add("Car.png");// convert to method
+        cars.add("Car1.png");
+        sprites = new String[]{cars.get(1)};
         frame = 0;
         frameSpeed = 35;
         actorSpeed = 10;
@@ -40,7 +44,7 @@ public class Car extends Actor implements KeyboardControllable {
         //don't allow scrolling off the edge of the screen
         if (posX - getWidth()/2 > 0 && vx < 1)
             posX += vx;
-        else if (posX + getWidth()  + (getWidth()/2)< Stage.WIDTH )//&& vx > 1)
+        else if (posX + getWidth()  + (getWidth()/2)< Stage.WIDTH && vx > 1)
             posX += vx;
 
         if (posY - getHeight()/2 > 0 && vy < 0)
