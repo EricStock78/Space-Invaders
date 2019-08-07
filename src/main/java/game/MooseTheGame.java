@@ -21,14 +21,15 @@ public class MooseTheGame extends Stage implements KeyListener {
     private InputHandler keyPressedHandlerLeft;
     private InputHandler keyReleasedHandlerLeft;
 
-    private InputHandler keyPressedHandlerRight;
-    private InputHandler keyReleasedHandlerRight;
+//    private InputHandler keyPressedHandlerRight;
+//    private InputHandler keyReleasedHandlerRight;
 
     public long usedTime;//time taken per game step
     public BufferStrategy strategy;     //double buffering strategy
     public int roadHorizontalOffset;
 
-    private TNT tnt;
+   // private TNT tnt;
+    private Moose moose;
 
     private Splat splat;
     private int splatFrames;
@@ -89,8 +90,9 @@ public class MooseTheGame extends Stage implements KeyListener {
     public void initWorld() {
         // ericsCar = new EricsCar(this, EricsCar.ePlayerNumber.PN_ONE);
         car = new Car(this);
+        moose = new Moose(this);
 
-        tnt = new TNT(this);
+        //tnt = new TNT(this);
         //paddleRight = new Paddle(this, Paddle.ePlayerNumber.PN_TWO);
         //ball = new Ball(this);
     }
@@ -117,8 +119,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
 
         car.paint(g);
-
-        tnt.paint(g);
+        moose.paint(g);
+       // tnt.paint(g);
 
         if (splat != null) {
             splat.paint(g);
@@ -148,8 +150,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         roadHorizontalOffset %= Stage.WIDTH;
 
         car.update();
-
-        tnt.update();
+        moose.update();
+       // tnt.update();
 
         if (splat != null) {
             splat.update();
@@ -165,7 +167,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private void checkCollision() {
 
-        if (car.getBounds().intersects(tnt.getBounds())) {
+        if (car.getBounds().intersects(moose.getBounds())) {
            gameOver=true;
 
             System.out.println("i hit the thing");
@@ -259,6 +261,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         xPos += 30;
         g.setFont(new Font("Arial", Font.BOLD, 30));
         g.drawString("ENTER: try again", (xPos < 0 ? 0 : xPos), getHeight() / 2 + 50);
+
 
         strategy.show();
     }

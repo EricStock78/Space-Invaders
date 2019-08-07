@@ -11,7 +11,7 @@ public class Moose extends Actor {
 
         vx = -1;
 
-        sprites = new String[] {"tnt.png"};
+        sprites = new String[] {"mooseBig.png"};
 
         posX = 500;
     }
