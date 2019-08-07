@@ -28,6 +28,8 @@ public class MooseTheGame extends Stage implements KeyListener {
     public int roadHorizontalOffset;
 
     private TNT tnt;
+    private Timbit timbit;
+    private Coffee coffee;
 
     private Splat splat;
     private int splatFrames;
@@ -92,6 +94,9 @@ public class MooseTheGame extends Stage implements KeyListener {
         tnt = new TNT(this);
         //paddleRight = new Paddle(this, Paddle.ePlayerNumber.PN_TWO);
         //ball = new Ball(this);
+
+        timbit = new Timbit(this);
+        coffee = new Coffee(this);
     }
 
     public void paintWorld() {
@@ -119,6 +124,9 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         tnt.paint(g);
 
+        timbit.paint(g);
+
+        coffee.paint(g);
         if (splat != null) {
             splat.paint(g);
         }
