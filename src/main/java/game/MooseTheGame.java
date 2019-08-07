@@ -21,15 +21,16 @@ public class MooseTheGame extends Stage implements KeyListener {
     private InputHandler keyPressedHandlerLeft;
     private InputHandler keyReleasedHandlerLeft;
 
-//    private InputHandler keyPressedHandlerRight;
-//    private InputHandler keyReleasedHandlerRight;
+    private InputHandler keyPressedHandlerRight;
+    private InputHandler keyReleasedHandlerRight;
 
     public long usedTime;//time taken per game step
     public BufferStrategy strategy;     //double buffering strategy
     public int roadHorizontalOffset;
 
-   // private TNT tnt;
-    private Moose moose;
+    private TNT tnt;
+    private Timbit timbit;
+    private Coffee coffee;
 
     private Splat splat;
     private int splatFrames;
@@ -90,11 +91,13 @@ public class MooseTheGame extends Stage implements KeyListener {
     public void initWorld() {
         // ericsCar = new EricsCar(this, EricsCar.ePlayerNumber.PN_ONE);
         car = new Car(this);
-        moose = new Moose(this);
 
-        //tnt = new TNT(this);
+        tnt = new TNT(this);
         //paddleRight = new Paddle(this, Paddle.ePlayerNumber.PN_TWO);
         //ball = new Ball(this);
+
+        timbit = new Timbit(this);
+        coffee = new Coffee(this);
     }
 
     public void paintWorld() {
@@ -119,9 +122,12 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
 
         car.paint(g);
-        moose.paint(g);
-       // tnt.paint(g);
 
+        tnt.paint(g);
+
+        timbit.paint(g);
+
+        coffee.paint(g);
         if (splat != null) {
             splat.paint(g);
         }
@@ -150,8 +156,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         roadHorizontalOffset %= Stage.WIDTH;
 
         car.update();
-        moose.update();
-       // tnt.update();
+
+        tnt.update();
 
         if (splat != null) {
             splat.update();
@@ -167,7 +173,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private void checkCollision() {
 
-        if (car.getBounds().intersects(moose.getBounds())) {
+        if (car.getBounds().intersects(tnt.getBounds())) {
            gameOver=true;
 
             System.out.println("i hit the thing");
@@ -261,7 +267,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         xPos += 30;
         g.setFont(new Font("Arial", Font.BOLD, 30));
         g.drawString("ENTER: try again", (xPos < 0 ? 0 : xPos), getHeight() / 2 + 50);
-
 
         strategy.show();
     }
