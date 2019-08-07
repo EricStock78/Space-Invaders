@@ -6,7 +6,7 @@ public class TNT extends Actor {
     public TNT(Stage canvas) {
         super(canvas, 80, 80, 80, 80);
 
-        vx = -5;
+        vx = -1;
 
         sprites = new String[] {"tnt.png"};
 
