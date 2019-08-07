@@ -336,9 +336,10 @@ public class Invaders extends Stage implements KeyListener {
 	}
 
 	public static void main(String[] args) {
-        //DriveDemo demo = new DriveDemo();
-        //demo.game();
-		MooseTheGame mooseTheGame = new MooseTheGame();
+      //  DriveDemo demo = new DriveDemo();
+       // demo.game();
+
+        MooseTheGame mooseTheGame = new MooseTheGame();
 		mooseTheGame.game();
 
 		//PongGame pong = new PongGame();

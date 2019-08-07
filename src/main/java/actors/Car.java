@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 
 public class Car extends Actor implements KeyboardControllable {
     private boolean up,down,left,right;
+    public enum ePlayerNumber {
+        PN_ONE,}
 
 
     public Car(Stage stage) {
@@ -18,7 +20,7 @@ public class Car extends Actor implements KeyboardControllable {
         posY = Stage.HEIGHT/2 - 128;
     }
 
-    public void update() {
+    public  void update() {
         super.update();
         updateSpeed();
     }
@@ -36,9 +38,9 @@ public class Car extends Actor implements KeyboardControllable {
             vx = actorSpeed;
 
         //don't allow scrolling off the edge of the screen
-        if (posX - getWidth()/2 > 0 && vx < 0)
+        if (posX - getWidth()/2 > 0 && vx < 1)
             posX += vx;
-        else if (posX + getWidth()  + (getWidth()/2)< Stage.WIDTH && vx > 0)
+        else if (posX + getWidth()  + (getWidth()/2)< Stage.WIDTH )//&& vx > 1)
             posX += vx;
 
         if (posY - getHeight()/2 > 0 && vy < 0)
