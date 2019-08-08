@@ -10,7 +10,8 @@ import java.util.Random;
 public class Moose extends Actor {
     public Moose(Stage canvas) {
         super(canvas, 80, 80, 50, 50);
-        // TODO: 2019-08-08 make the moose spawn on the right and travel to the left
+        // TODO: 2019-08-08 make a moose generator
+
 
 
         Random randy = new Random();
