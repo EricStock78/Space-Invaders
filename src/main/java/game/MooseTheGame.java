@@ -55,7 +55,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     public MooseTheGame() {
         //init the UI
         setBounds(0, 0, Stage.WIDTH, Stage.HEIGHT);
-        setBackground(Color.black);
+        setBackground(new Color(73, 62, 92));
 
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(Stage.WIDTH, Stage.HEIGHT));
@@ -98,12 +98,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         //keyReleasedHandlerRight = new InputHandler(this, paddleRight);
         //keyReleasedHandlerRight.action = InputHandler.Action.RELSEASE;
         roadHorizontalOffset = 0;
-    }
-
-    public void paintMainMenu() {
-        start = new JButton();
-        start.setIcon(new ImageIcon("playButton.png"));
-        frame.add(start);
     }
 
     public void initWorld() {
@@ -185,7 +179,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void setTigerBlood() {
-         final Timer tigerTimer = new Timer();
+        final Timer tigerTimer = new Timer();
 
         try {
             hitBlood = true;
@@ -358,8 +352,23 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy.show();
     }
 
+    public void paintMainMenu() {
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
 
-    public void painOptionsMenu() {
+        g.drawImage(ResourceLoader.getInstance().getSprite("title.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("playButton.png"), 18, 250, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("highscoreButton.png"), 343, 250, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("customizeButton.png"), 667, 250, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("optionsButton.png"), 165, 380, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 515, 380, this);
+
+        strategy.show();
+    }
+
+
+    public void paintOptionsMenu() {
 
     }
 

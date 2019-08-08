@@ -341,7 +341,7 @@ public class Invaders extends Stage implements KeyListener {
        // demo.game();
 
         MooseTheGame mooseTheGame = new MooseTheGame();
-		mooseTheGame.game();
+		mooseTheGame.paintMainMenu();
 
 		//PongGame pong = new PongGame();
 		//pong.game();
