@@ -158,6 +158,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         car.update();
         moose.update();
+        timbit.update();
+        coffee.update();
        // tnt.update();
 
         if (splat != null) {
