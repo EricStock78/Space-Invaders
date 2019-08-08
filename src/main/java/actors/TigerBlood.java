@@ -21,6 +21,7 @@ public class TigerBlood extends Actor{
         super.update();
         posX += vx;
         posY += vy;
+
     }
 
     public void giveTigerBlood(Car car) {
