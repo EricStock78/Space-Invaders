@@ -9,14 +9,15 @@ public class Car extends Actor implements KeyboardControllable {
     private boolean up,down,left,right;
     private boolean isWASD; // for switching between controls
     private ArrayList<String> cars = new ArrayList();// to be used to select between cars
-
+    private int carHealth;
 
     public Car(Stage stage) {
 
-        super(stage, 145, 73, 145, 73);
+        super(stage, 145, 73, 145, 73 );
         cars.add("Car.png");// convert to method
         cars.add("Car1.png");
         sprites = new String[]{cars.get(1)};
+
         frame = 0;
         frameSpeed = 35;
         actorSpeed = 10;
