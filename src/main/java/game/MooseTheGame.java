@@ -181,7 +181,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     private void checkCollision() {
-        
+
         // TODO: 2019-08-07 fix the removal of timbit and coffee
         if (car.getBounds().intersects(timbit.getBounds())){
             health+=10;
@@ -228,6 +228,9 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     public void game() {
         //loopSound("music.wav");
+        /*************************************************************************************************************
+         *                                                      GAME LOOP
+         **************************************************************************************************************/
         usedTime = 0;
         while (isVisible()) {
             long startTime = System.currentTimeMillis();
@@ -248,6 +251,15 @@ public class MooseTheGame extends Stage implements KeyListener {
                     e.printStackTrace();
                 }
             }
+            int random = (int) (Math.random() * 1000);
+            if (random == 700) {
+//                Actor ufo = new Ufo(this);
+//                ufo.setX(0);
+//                ufo.setY(20);
+//                ufo.setVx(1);
+                actors.add(moose);
+            }
+
             updateWorld();
             paintWorld();
             System.out.println(actors.toString());
