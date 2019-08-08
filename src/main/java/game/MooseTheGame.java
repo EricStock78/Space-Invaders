@@ -6,6 +6,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 import javax.swing.JFrame;
@@ -23,23 +25,21 @@ public class MooseTheGame extends Stage implements KeyListener {
     private InputHandler keyPressedHandlerRight;
     private InputHandler keyReleasedHandlerRight;
 
-    public long usedTime;//time taken per game step
+    public long usedTime; //time taken per game step
+    public long timeElapsed; // total time game has been running
     public BufferStrategy strategy;     //double buffering strategy
     public int roadHorizontalOffset;
 
-    //private TNT tnt;
+    private Car car;
     private Timbit timbit;
     private Coffee coffee;
     private Moose moose;
-    private int health =100;
+    private TigerBlood tigerBlood;
+    private int health = 100;
+    private int score;
 
     private Splat splat;
     private int splatFrames;
-
-
-    private Car car;
-    //private Paddle paddleRight;
-    //rivate Ball ball;
 
     public MooseTheGame() {
         //init the UI
@@ -90,13 +90,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
 
     public void initWorld() {
-        // ericsCar = new EricsCar(this, EricsCar.ePlayerNumber.PN_ONE);
         car = new Car(this);
         actors.add(car);
-
-       // tnt = new TNT(this);
-        //paddleRight = new Paddle(this, Paddle.ePlayerNumber.PN_TWO);
-        //ball = new Ball(this);
 
         timbit = new Timbit(this);
         actors.add(timbit);
@@ -104,16 +99,19 @@ public class MooseTheGame extends Stage implements KeyListener {
         actors.add(coffee);
         moose = new Moose(this);
         actors.add(moose);
+        tigerBlood = new TigerBlood(this);
+        actors.add(tigerBlood);
+
     }
 
     public void paintWorld() {
 
         //get the graphics from the buffer
         Graphics g = strategy.getDrawGraphics();
+
         //init image to background
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
-
 
         g.drawImage(ResourceLoader.getInstance().getSprite("road.png"), -roadHorizontalOffset, 0, this);
 
@@ -127,17 +125,11 @@ public class MooseTheGame extends Stage implements KeyListener {
             actor.paint(g);
         }
 
-       // car.paint(g);
+        paintScore(g, score);
 
-        //tnt.paint(g);
-       // moose.paint(g);
-       // timbit.paint(g);
-
-        //.paint(g);
-        //ball.paint(g);
-        paintFPS(g);
         //swap buffer
         strategy.show();
+
     }
 
     public void paintFPS(Graphics g) {
@@ -148,6 +140,28 @@ public class MooseTheGame extends Stage implements KeyListener {
             g.drawString("--- fps", 0, Stage.HEIGHT - 50);
     }
 
+    public void paintScore(Graphics g, int score) {
+            g.setColor(Color.RED);
+            g.drawString(String.valueOf(score), Stage.WIDTH - 700, Stage.HEIGHT - 50);
+    }
+
+    public void trackScore() {
+        score = 0;
+        Timer timer = new Timer();
+
+        try {
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    score += 10;
+                }
+            }, 0, 2000);
+        }
+        catch (Exception e)  {
+            timer.cancel();
+        }
+    }
+
     public void paint(Graphics g) {
     }
 
@@ -155,6 +169,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         roadHorizontalOffset += 10;
         roadHorizontalOffset %= Stage.WIDTH;
+
         for(int i = 0; i < actors.size(); i++){
             if (actors.get(i).isMarkedForRemoval()){
                 actors.remove(i);
@@ -162,11 +177,6 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
             actors.get(i).update();
         }
-        //car.update();
-        //moose.update();
-        //timbit.update();
-        //coffee.update();
-       // tnt.update();
 //
 //        if (splat != null) {
 //            splat.update();
@@ -185,27 +195,25 @@ public class MooseTheGame extends Stage implements KeyListener {
         // TODO: 2019-08-07 fix the removal of timbit and coffee
         if (car.getBounds().intersects(timbit.getBounds())){
             health+=10;
-            System.out.println("yumm!");
+            //System.out.println("yumm!");
             timbit.setMarkedForRemoval(true);
         }
 
         if (car.getBounds().intersects(coffee.getBounds())){
             health+=10;
-            System.out.println("yumm!");
+            //System.out.println("yumm!");
             coffee.setMarkedForRemoval(true);
+        }
+
+        if (car.getBounds().intersects(tigerBlood.getBounds())) {
+            //isTigerBlood = true;
+            tigerBlood.setMarkedForRemoval(true);
         }
 
         if (car.getBounds().intersects(moose.getBounds())||health==0) {
             gameOver=true;
 
-            System.out.println("i hit the thing");
-//            if( splat == null) {
-//                splat = new Splat(this);
-//                splat.setX(car.getX());
-//                splat.setY(car.getY());
-//
-//                splatFrames = 0;
-            // }
+            //System.out.println("i hit the thing");
         }
 
 
@@ -232,6 +240,8 @@ public class MooseTheGame extends Stage implements KeyListener {
          *                                                      GAME LOOP
          **************************************************************************************************************/
         usedTime = 0;
+        trackScore();
+
         while (isVisible()) {
             long startTime = System.currentTimeMillis();
             checkCollision();
@@ -262,7 +272,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             updateWorld();
             paintWorld();
-            System.out.println(actors.toString());
+            //System.out.println(actors.toString());
             usedTime = System.currentTimeMillis() - startTime;
         }
     }
