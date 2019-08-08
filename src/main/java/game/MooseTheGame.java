@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -141,8 +142,8 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void paintScore(Graphics g, int score) {
-            g.setColor(Color.RED);
-            g.drawString(String.valueOf(score), Stage.WIDTH - 700, Stage.HEIGHT - 50);
+        g.setColor(Color.RED);
+        g.drawString(String.valueOf(score), Stage.WIDTH - 700, Stage.HEIGHT - 50);
     }
 
     public void trackScore() {
@@ -156,8 +157,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                     score += 10;
                 }
             }, 0, 2000);
-        }
-        catch (Exception e)  {
+        } catch (Exception e) {
             timer.cancel();
         }
     }
@@ -170,8 +170,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         roadHorizontalOffset += 10;
         roadHorizontalOffset %= Stage.WIDTH;
 
-        for(int i = 0; i < actors.size(); i++){
-            if (actors.get(i).isMarkedForRemoval()){
+        for (int i = 0; i < actors.size(); i++) {
+            if (actors.get(i).isMarkedForRemoval()) {
                 actors.remove(i);
                 i--;
             }
@@ -193,14 +193,14 @@ public class MooseTheGame extends Stage implements KeyListener {
     private void checkCollision() {
 
         // TODO: 2019-08-07 fix the removal of timbit and coffee
-        if (car.getBounds().intersects(timbit.getBounds())){
-            health+=10;
+        if (car.getBounds().intersects(timbit.getBounds())) {
+            health += 10;
             //System.out.println("yumm!");
             timbit.setMarkedForRemoval(true);
         }
 
-        if (car.getBounds().intersects(coffee.getBounds())){
-            health+=10;
+        if (car.getBounds().intersects(coffee.getBounds())) {
+            health += 10;
             //System.out.println("yumm!");
             coffee.setMarkedForRemoval(true);
         }
@@ -210,8 +210,8 @@ public class MooseTheGame extends Stage implements KeyListener {
             tigerBlood.setMarkedForRemoval(true);
         }
 
-        if (car.getBounds().intersects(moose.getBounds())||health==0) {
-            gameOver=true;
+        if (car.getBounds().intersects(moose.getBounds()) || health == 0) {
+            gameOver = true;
 
             //System.out.println("i hit the thing");
         }
@@ -252,7 +252,8 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (usedTime == 0) usedTime = 1;
             if (super.gameOver) {
                 paintGameOver();
-                continue;}
+                continue;
+            }
             int timeDiff = 1000 / DESIRED_FPS - (int) (usedTime);
             if (timeDiff > 0) {
                 try {
@@ -329,6 +330,34 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void paintPauseMenu() {
+
+    }
+
+    /**
+     * a method that will generate random actors such as moose pot holes tigers blood ect
+     */
+    private void actorGenerator() {
+        Random randy = new Random();
+        int picker = randy.nextInt(10);
+
+        switch (picker) {
+            case 1:
+                Moose moose = new Moose(this);
+                actors.add(moose);
+                break;
+            case 2:
+                Timbit timbit = new Timbit(this);
+                actors.add(timbit);
+                break;
+            case 3:
+                TigerBlood tigerBlood  = new TigerBlood(this);
+                break;
+            case 4:
+                Coffee coffee = new Coffee(this);
+                actors.add(coffee);
+                break;
+        }
+
 
     }
 }
