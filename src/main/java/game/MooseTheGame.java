@@ -31,12 +31,10 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Timbit timbit;
     private Coffee coffee;
     private Moose moose;
-    private PotHole potHole;
-    private int health = 100;
+    private int health =100;
 
-
-  //  private Splat splat;
-    // private int splatFrames;
+    private Splat splat;
+    private int splatFrames;
 
 
     private Car car;
@@ -96,13 +94,14 @@ public class MooseTheGame extends Stage implements KeyListener {
         car = new Car(this);
         actors.add(car);
 
-        // tnt = new TNT(this);
+       // tnt = new TNT(this);
         //paddleRight = new Paddle(this, Paddle.ePlayerNumber.PN_TWO);
         //ball = new Ball(this);
 
         timbit = new Timbit(this);
         actors.add(timbit);
         coffee = new Coffee(this);
+        actors.add(coffee);
         moose = new Moose(this);
         actors.add(moose);
     }
@@ -128,16 +127,11 @@ public class MooseTheGame extends Stage implements KeyListener {
             actor.paint(g);
         }
 
-        // car.paint(g);
+       // car.paint(g);
 
         //tnt.paint(g);
-        // moose.paint(g);
-        // timbit.paint(g);
-
-        coffee.paint(g);
-//        if (splat != null) {
-//            splat.paint(g);
-//        }
+       // moose.paint(g);
+       // timbit.paint(g);
 
         //.paint(g);
         //ball.paint(g);
@@ -161,12 +155,18 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         roadHorizontalOffset += 10;
         roadHorizontalOffset %= Stage.WIDTH;
-// TODO: 2019-08-08  for loop size of actors array  check each for isMarkedForRemoval then actors.remove(i) then i--
-        car.update();
-        moose.update();
-        timbit.update();
-        coffee.update();
-        // tnt.update();
+        for(int i = 0; i < actors.size(); i++){
+            if (actors.get(i).isMarkedForRemoval()){
+                actors.remove(i);
+                i--;
+            }
+            actors.get(i).update();
+        }
+        //car.update();
+        //moose.update();
+        //timbit.update();
+        //coffee.update();
+       // tnt.update();
 //
 //        if (splat != null) {
 //            splat.update();
@@ -182,16 +182,21 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private void checkCollision() {
 
-        // TODO: 2019-08-07  make timbit disapear once hit
-        // TODO: 2019-08-07 make coffee disapear once hit
-        if (car.getBounds().intersects(timbit.getBounds())) {
-            health += 10;
+        // TODO: 2019-08-07 fix the removal of timbit and coffee
+        if (car.getBounds().intersects(timbit.getBounds())){
+            health+=10;
             System.out.println("yumm!");
-            timbit.setMarkedForRemoval(true);//dose not work :(
-
+            timbit.setMarkedForRemoval(true);
         }
-        if (car.getBounds().intersects(moose.getBounds()) || health == 0) {
-            gameOver = true;
+
+        if (car.getBounds().intersects(coffee.getBounds())){
+            health+=10;
+            System.out.println("yumm!");
+            coffee.setMarkedForRemoval(true);
+        }
+
+        if (car.getBounds().intersects(moose.getBounds())||health==0) {
+            gameOver=true;
 
             System.out.println("i hit the thing");
 //            if( splat == null) {
@@ -227,7 +232,6 @@ public class MooseTheGame extends Stage implements KeyListener {
          *                                                      GAME LOOP
          **************************************************************************************************************/
         usedTime = 0;
-
         while (isVisible()) {
             long startTime = System.currentTimeMillis();
             checkCollision();
@@ -238,8 +242,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (usedTime == 0) usedTime = 1;
             if (super.gameOver) {
                 paintGameOver();
-                continue;
-            }
+                continue;}
             int timeDiff = 1000 / DESIRED_FPS - (int) (usedTime);
             if (timeDiff > 0) {
                 try {
