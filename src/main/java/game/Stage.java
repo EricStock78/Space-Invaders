@@ -46,4 +46,6 @@ public class Stage extends Canvas implements ImageObserver {
     public void resetGame() {
    
     }
+
+
 }
