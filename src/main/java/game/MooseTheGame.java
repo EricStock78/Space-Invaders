@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,6 +25,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private InputHandler keyPressedHandlerRight;
     private InputHandler keyReleasedHandlerRight;
+    private BufferedImage playBtn, playTile; //playBtn cache
+    private int backgroundY; //playBtn cache position
 
     public long usedTime; //time taken per game step
     public BufferStrategy strategy;     //double buffering strategy
@@ -35,14 +38,10 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Coffee coffee;
     private Moose moose;
     private TigerBlood tigerBlood;
-    private int health = 100;
+    protected int health = 100;
     private int score;
     private boolean hitBlood = false;
-    private boolean isMoose;
-    private boolean isTimbit;
-    private boolean isboold;
-    private boolean isCoffee;
-    private boolean isPotHole;
+
 
     private Splat splat;
     private int splatFrames;
@@ -102,16 +101,17 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     public void initWorld() {
         car = new Car(this);
+
         actors.add(car);
 
-        timbit = new Timbit(this);
-        actors.add(timbit);
-        coffee = new Coffee(this);
-        actors.add(coffee);
-        moose = new Moose(this);
-        actors.add(moose);
-        tigerBlood = new TigerBlood(this);
-        actors.add(tigerBlood);
+//        timbit = new Timbit(this);
+//        actors.add(timbit);
+//        coffee = new Coffee(this);
+//        actors.add(coffee);
+//        moose = new Moose(this);
+//        actors.add(moose);
+//        tigerBlood = new TigerBlood(this);
+//        actors.add(tigerBlood);
 
     }
 
@@ -120,7 +120,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         //get the graphics from the buffer
         Graphics g = strategy.getDrawGraphics();
 
-        //init image to background
+        //init image to playBtn
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
@@ -128,7 +128,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         g.drawImage(ResourceLoader.getInstance().getSprite("road.png"), -roadHorizontalOffset + Stage.WIDTH, 0, this);
 
-        //load subimage from the background
+        //load subimage from the playBtn
 
         //paint the actors
         for (int i = 0; i < actors.size(); i++) {
@@ -152,8 +152,8 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void paintScore(Graphics g, int score) {
-            g.setColor(Color.RED);
-            g.drawString(String.valueOf(score), Stage.WIDTH - 700, Stage.HEIGHT - 50);
+        g.setColor(Color.RED);
+        g.drawString(String.valueOf(score), Stage.WIDTH - 700, Stage.HEIGHT - 50);
     }
 
     public void trackScore() {
@@ -164,16 +164,14 @@ public class MooseTheGame extends Stage implements KeyListener {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (hitBlood){
+                    if (hitBlood) {
                         score += 20;
-                    }
-                    else {
+                    } else {
                         score += 10;
                     }
                 }
             }, 2000, 2000);
-        }
-        catch (Exception e)  {
+        } catch (Exception e) {
             timer.cancel();
         }
     }
@@ -191,8 +189,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                     tigerTimer.cancel();
                 }
             }, 10000, 1);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             tigerTimer.cancel();
         }
     }
@@ -206,8 +203,9 @@ public class MooseTheGame extends Stage implements KeyListener {
         roadHorizontalOffset += 10;
         roadHorizontalOffset %= Stage.WIDTH;
 
-        for(int i = 0; i < actors.size(); i++){
-            if (actors.get(i).isMarkedForRemoval()){
+        for (int i = 0; i < actors.size(); i++) {
+            System.out.println(actors.get(i).toString());
+            if (actors.get(i).isMarkedForRemoval()) {
                 actors.remove(i);
                 i--;
             }
@@ -229,28 +227,77 @@ public class MooseTheGame extends Stage implements KeyListener {
     private void checkCollision() {
 
         // TODO: 2019-08-07 fix the removal of timbit and coffee
-        if (car.getBounds().intersects(timbit.getBounds())){
-            health+=10;
-            //System.out.println("yumm!");
-            timbit.setMarkedForRemoval(true);
+
+        for (int i = 0; i < actors.size(); i++) {
+            if (actors.get(i) instanceof Moose) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    gameOver = true;
+
+                }
+            }
+
+            if (actors.get(i) instanceof Timbit) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    health += 10;
+                    actors.get(i).setMarkedForRemoval(true);
+                }
+
+            }
+            if (actors.get(i) instanceof TigerBlood) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    setTigerBlood();
+                    actors.get(i).setMarkedForRemoval(true);
+                }
+
+            }
+            if (actors.get(i) instanceof PotHole) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    actors.get(i).setMarkedForRemoval(true);
+
+
+                }
+                if (actors.get(i) instanceof Coffee) {
+                    if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                        actors.get(i).setMarkedForRemoval(true);
+                        System.out.println("hit a coffee");
+                    }
+
+                }
+
+            }
         }
 
-        if (car.getBounds().intersects(coffee.getBounds())){
-            health+=10;
-            //System.out.println("yumm!");
-            coffee.setMarkedForRemoval(true);
-        }
-
-        if (car.getBounds().intersects(tigerBlood.getBounds())) {
-            setTigerBlood();
-            tigerBlood.setMarkedForRemoval(true);
-        }
-
-        if (car.getBounds().intersects(moose.getBounds())||health==0) {
-            gameOver=true;
-
-            //System.out.println("i hit the thing");
-        }
+//        if (isTimbit) {
+//
+//
+//            if (car.getBounds().intersects(timbit.getBounds())) {
+//                health += 10;
+//                //System.out.println("yumm!");
+//                timbit.setMarkedForRemoval(true);
+//            }
+//        }
+//        if (isCoffee) {
+//            if (car.getBounds().intersects(coffee.getBounds())) {
+//                health += 10;
+//                //System.out.println("yumm!");
+//                coffee.setMarkedForRemoval(true);
+//            }
+//        }
+//        if (isboold) {
+//
+//
+//            if (car.getBounds().intersects(tigerBlood.getBounds())) {
+//                setTigerBlood();
+//                tigerBlood.setMarkedForRemoval(true);
+//            }
+//        }
+//        if (isMoose) {
+//            if (car.getBounds().intersects(moose.getBounds()) || health == 0) {
+//                gameOver = true;
+//
+//                //System.out.println("i hit the thing");
+//            }
+//        }
 
 
         //if( ball.getBounds().intersects(ericsCar.getBounds())) {
@@ -288,7 +335,8 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (usedTime == 0) usedTime = 1;
             if (super.gameOver) {
                 paintGameOver();
-                continue;}
+                continue;
+            }
             int timeDiff = 1000 / DESIRED_FPS - (int) (usedTime);
             if (timeDiff > 0) {
                 try {
@@ -297,15 +345,16 @@ public class MooseTheGame extends Stage implements KeyListener {
                     e.printStackTrace();
                 }
             }
-            int random = (int) (Math.random() * 1000);
-            if (random == 700) {
-//                Actor ufo = new Ufo(this);
-//                ufo.setX(0);
-//                ufo.setY(20);
-//                ufo.setVx(1);
-                actors.add(moose);
-            }
+//            int random = (int) (Math.random() * 1000);
+//            if (random == 700) {
+////                Actor ufo = new Ufo(this);
+////                ufo.setX(0);
+////                ufo.setY(20);
+////                ufo.setVx(1);
+//                actors.add(moose);
+//            }
 
+            actorGenerator();
             updateWorld();
             paintWorld();
             //System.out.println(actors.toString());
@@ -337,7 +386,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        // paintScore(g);
+        //   paintScore(g);
 
         //about 310 pixels wide
         g.setFont(new Font("Arial", Font.BOLD, 50));
@@ -348,6 +397,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         xPos += 30;
         g.setFont(new Font("Arial", Font.BOLD, 30));
         g.drawString("ENTER: try again", (xPos < 0 ? 0 : xPos), getHeight() / 2 + 50);
+
 
         strategy.show();
     }
@@ -379,4 +429,31 @@ public class MooseTheGame extends Stage implements KeyListener {
     public void paintPauseMenu() {
 
     }
+
+    private void actorGenerator() {
+        Random randy = new Random();
+        int picker = randy.nextInt(1000);
+
+        switch (picker) {
+            case 1:
+                moose = new Moose(this);
+                actors.add(moose);
+
+                break;
+            case 2:
+                timbit = new Timbit(this);
+                actors.add(timbit);
+
+            case 3:
+                coffee = new Coffee(this);
+                actors.add(coffee);
+
+            case 4:
+                tigerBlood = new TigerBlood(this);
+                actors.add(tigerBlood);
+
+        }
+    }
+
+
 }
