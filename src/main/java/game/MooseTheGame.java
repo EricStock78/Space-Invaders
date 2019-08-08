@@ -26,7 +26,6 @@ public class MooseTheGame extends Stage implements KeyListener {
     private InputHandler keyReleasedHandlerRight;
 
     public long usedTime; //time taken per game step
-    public long timeElapsed; // total time game has been running
     public BufferStrategy strategy;     //double buffering strategy
     public int roadHorizontalOffset;
 
@@ -34,13 +33,10 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Timbit timbit;
     private Coffee coffee;
     private Moose moose;
-    private TigerBlood tigerBlood;
     private int health = 100;
     private int score;
+    private TigerBlood tigerBlood;
     private boolean hitBlood = false;
-
-    private Splat splat;
-    private int splatFrames;
 
     public MooseTheGame() {
         //init the UI
@@ -178,14 +174,10 @@ public class MooseTheGame extends Stage implements KeyListener {
                 @Override
                 public void run() {
                     hitBlood = false;
-                    int count = 1;
-
-                    if (count == 1) {
-                        tigerTimer.cancel();
-                    }
+                    tigerTimer.cancel();
                 }
             }, 10000, 1);
-        } 
+        }
         catch (Exception e) {
             tigerTimer.cancel();
         }
@@ -261,7 +253,6 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
         }).start();
     }
-
 
     public void game() {
         //loopSound("music.wav");
