@@ -181,7 +181,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         // TODO: 2019-08-07 make coffee disapear once hit
         if (car.getBounds().intersects(timbit.getBounds())){
             System.out.println("yumm!");
-            timbit.setMarkedForRemoval(true);
+            timbit.setMarkedForRemoval(true);//dose not work :(
 
         }
         if (car.getBounds().intersects(moose.getBounds())||health==0) {
