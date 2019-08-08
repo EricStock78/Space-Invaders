@@ -21,5 +21,6 @@ public class Timbit extends Actor{
         super.update();
         posX += vx;
         posY += vy;
+
     }
 }
