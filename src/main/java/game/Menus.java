@@ -1,4 +1,4 @@
-package game;
+/*package game;
 
 import java.awt.event.KeyListener;
 
@@ -11,13 +11,19 @@ public class Menus extends Stage implements KeyListener {
 
     }
 
-    public paintStartMenu() {
+    public void paintStartMenu() {
 
     }
 
-    public paintOptionsMenu() {
+    public void paintOptionsMenu() {
 
     }
 
-    public
-}
+    public void paintCustomizeMenu() {
+
+    }
+
+    public void paintPauseMenu() {
+
+    }
+}*/
