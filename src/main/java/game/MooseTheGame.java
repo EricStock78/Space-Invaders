@@ -31,6 +31,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Timbit timbit;
     private Coffee coffee;
     private Moose moose;
+    private int health =100;
 
     private Splat splat;
     private int splatFrames;
@@ -176,8 +177,15 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private void checkCollision() {
 
-        if (car.getBounds().intersects(moose.getBounds())) {
-           gameOver=true;
+        // TODO: 2019-08-07  make timbit disapear once hit
+        // TODO: 2019-08-07 make coffee disapear once hit
+        if (car.getBounds().intersects(timbit.getBounds())){
+            System.out.println("yumm!");
+            timbit.setMarkedForRemoval(true);
+
+        }
+        if (car.getBounds().intersects(moose.getBounds())||health==0) {
+            gameOver=true;
 
             System.out.println("i hit the thing");
 //            if( splat == null) {
@@ -231,6 +239,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
             updateWorld();
             paintWorld();
+            System.out.println(actors.toString());
             usedTime = System.currentTimeMillis() - startTime;
         }
     }
