@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class TigerBlood extends Actor{
     private Random randy = new Random();
+
     public TigerBlood(Stage canvas) {
         super(canvas, 80, 80, 80, 80);
 
@@ -21,10 +22,6 @@ public class TigerBlood extends Actor{
         super.update();
         posX += vx;
         posY += vy;
-    }
-
-    public void giveTigerBlood(Car car) {
-
     }
 
 }
