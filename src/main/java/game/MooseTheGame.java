@@ -277,4 +277,16 @@ public class MooseTheGame extends Stage implements KeyListener {
     public void paintMainMenu() {
 
     }
+
+    public void painOptionsMenu() {
+
+    }
+
+    public void paintCustomizationMenu() {
+
+    }
+
+    public void paintPauseMenu() {
+
+    }
 }
