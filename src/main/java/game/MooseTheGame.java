@@ -10,8 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import actors.*;
 
@@ -29,6 +28,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     public BufferStrategy strategy;     //double buffering strategy
     public int roadHorizontalOffset;
 
+    private JFrame frame;
     private Car car;
     private Timbit timbit;
     private Coffee coffee;
@@ -37,6 +37,11 @@ public class MooseTheGame extends Stage implements KeyListener {
     private int score;
     private TigerBlood tigerBlood;
     private boolean hitBlood = false;
+
+    private JButton start;
+    private JButton options;
+    private JButton customize;
+    private JButton exit;
 
     public MooseTheGame() {
         //init the UI
@@ -49,7 +54,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         panel.add(this);
 
-        JFrame frame = new JFrame("Moose The Game");
+        frame = new JFrame("Moose The Game");
         frame.add(panel);
 
         frame.setBounds(0, 0, Stage.WIDTH, Stage.HEIGHT);
@@ -72,6 +77,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy = getBufferStrategy();
         requestFocus();
         initWorld();
+        //paintMainMenu();
 
         keyPressedHandlerLeft = new InputHandler(this, car);
         keyPressedHandlerLeft.action = InputHandler.Action.PRESS;
@@ -85,6 +91,11 @@ public class MooseTheGame extends Stage implements KeyListener {
         roadHorizontalOffset = 0;
     }
 
+    public void paintMainMenu() {
+        start = new JButton();
+        start.setIcon(new ImageIcon("playButton.png"));
+        frame.add(start);
+    }
 
     public void initWorld() {
         car = new Car(this);
@@ -254,6 +265,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         }).start();
     }
 
+
     public void game() {
         //loopSound("music.wav");
         /*************************************************************************************************************
@@ -336,9 +348,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy.show();
     }
 
-    public void paintMainMenu() {
-
-    }
 
     public void painOptionsMenu() {
 
