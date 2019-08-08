@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,10 +34,18 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Timbit timbit;
     private Coffee coffee;
     private Moose moose;
+    private TigerBlood tigerBlood;
     private int health = 100;
     private int score;
-    private TigerBlood tigerBlood;
     private boolean hitBlood = false;
+    private boolean isMoose;
+    private boolean isTimbit;
+    private boolean isboold;
+    private boolean isCoffee;
+    private boolean isPotHole;
+
+    private Splat splat;
+    private int splatFrames;
 
     private JButton start;
     private JButton options;
@@ -185,7 +194,11 @@ public class MooseTheGame extends Stage implements KeyListener {
                 @Override
                 public void run() {
                     hitBlood = false;
-                    tigerTimer.cancel();
+                    int count = 1;
+
+                    if (count == 1) {
+                        tigerTimer.cancel();
+                    }
                 }
             }, 10000, 1);
         }
