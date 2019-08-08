@@ -101,6 +101,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         timbit = new Timbit(this);
         actors.add(timbit);
         coffee = new Coffee(this);
+        actors.add(coffee);
         moose = new Moose(this);
         actors.add(moose);
     }
@@ -132,11 +133,6 @@ public class MooseTheGame extends Stage implements KeyListener {
        // moose.paint(g);
        // timbit.paint(g);
 
-        coffee.paint(g);
-        if (splat != null) {
-            splat.paint(g);
-        }
-
         //.paint(g);
         //ball.paint(g);
         paintFPS(g);
@@ -159,11 +155,17 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         roadHorizontalOffset += 10;
         roadHorizontalOffset %= Stage.WIDTH;
-// TODO: 2019-08-08  for loop size of actors array  check each for isMarkedForRemoval then actors.remove(i) then i--
-        car.update();
-        moose.update();
-        timbit.update();
-        coffee.update();
+        for(int i = 0; i < actors.size(); i++){
+            if (actors.get(i).isMarkedForRemoval()){
+                actors.remove(i);
+                i--;
+            }
+            actors.get(i).update();
+        }
+        //car.update();
+        //moose.update();
+        //timbit.update();
+        //coffee.update();
        // tnt.update();
 //
 //        if (splat != null) {
@@ -179,15 +181,20 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     private void checkCollision() {
-
-        // TODO: 2019-08-07  make timbit disapear once hit
-        // TODO: 2019-08-07 make coffee disapear once hit
+        
+        // TODO: 2019-08-07 fix the removal of timbit and coffee
         if (car.getBounds().intersects(timbit.getBounds())){
             health+=10;
             System.out.println("yumm!");
-            timbit.setMarkedForRemoval(true);//dose not work :(
-
+            timbit.setMarkedForRemoval(true);
         }
+
+        if (car.getBounds().intersects(coffee.getBounds())){
+            health+=10;
+            System.out.println("yumm!");
+            coffee.setMarkedForRemoval(true);
+        }
+
         if (car.getBounds().intersects(moose.getBounds())||health==0) {
             gameOver=true;
 
