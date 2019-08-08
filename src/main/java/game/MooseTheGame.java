@@ -11,8 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import actors.*;
 
@@ -30,6 +29,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     public BufferStrategy strategy;     //double buffering strategy
     public int roadHorizontalOffset;
 
+    private JFrame frame;
     private Car car;
     private Timbit timbit;
     private Coffee coffee;
@@ -47,6 +47,11 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Splat splat;
     private int splatFrames;
 
+    private JButton start;
+    private JButton options;
+    private JButton customize;
+    private JButton exit;
+
     public MooseTheGame() {
         //init the UI
         setBounds(0, 0, Stage.WIDTH, Stage.HEIGHT);
@@ -58,7 +63,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         panel.add(this);
 
-        JFrame frame = new JFrame("Moose The Game");
+        frame = new JFrame("Moose The Game");
         frame.add(panel);
 
         frame.setBounds(0, 0, Stage.WIDTH, Stage.HEIGHT);
@@ -81,6 +86,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy = getBufferStrategy();
         requestFocus();
         initWorld();
+        //paintMainMenu();
 
         keyPressedHandlerLeft = new InputHandler(this, car);
         keyPressedHandlerLeft.action = InputHandler.Action.PRESS;
@@ -94,6 +100,11 @@ public class MooseTheGame extends Stage implements KeyListener {
         roadHorizontalOffset = 0;
     }
 
+    public void paintMainMenu() {
+        start = new JButton();
+        start.setIcon(new ImageIcon("playButton.png"));
+        frame.add(start);
+    }
 
     public void initWorld() {
         car = new Car(this);
@@ -174,7 +185,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void setTigerBlood() {
-        final Timer tigerTimer = new Timer();
+         final Timer tigerTimer = new Timer();
 
         try {
             hitBlood = true;
@@ -183,11 +194,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                 @Override
                 public void run() {
                     hitBlood = false;
-                    int count = 1;
-
-                    if (count == 1) {
-                        tigerTimer.cancel();
-                    }
+                    tigerTimer.cancel();
                 }
             }, 10000, 1);
         }
@@ -195,6 +202,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             tigerTimer.cancel();
         }
     }
+
 
     public void paint(Graphics g) {
     }
@@ -350,9 +358,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy.show();
     }
 
-    public void paintMainMenu() {
-
-    }
 
     public void painOptionsMenu() {
 
