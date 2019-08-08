@@ -22,4 +22,5 @@ public class Coffee extends Actor {
         posX += vx;
         posY += vy;
     }
+
 }
