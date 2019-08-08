@@ -37,6 +37,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     private TigerBlood tigerBlood;
     private int health = 100;
     private int score;
+    private boolean hitBlood = false;
 
     private Splat splat;
     private int splatFrames;
@@ -153,12 +154,40 @@ public class MooseTheGame extends Stage implements KeyListener {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    score += 10;
+                    if (hitBlood){
+                        score += 20;
+                    }
+                    else {
+                        score += 10;
+                    }
                 }
-            }, 0, 2000);
+            }, 2000, 2000);
         }
         catch (Exception e)  {
             timer.cancel();
+        }
+    }
+
+    public void setTigerBlood() {
+        final Timer tigerTimer = new Timer();
+
+        try {
+            hitBlood = true;
+
+            tigerTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    hitBlood = false;
+                    int count = 1;
+
+                    if (count == 1) {
+                        tigerTimer.cancel();
+                    }
+                }
+            }, 10000, 1);
+        } 
+        catch (Exception e) {
+            tigerTimer.cancel();
         }
     }
 
@@ -206,7 +235,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
 
         if (car.getBounds().intersects(tigerBlood.getBounds())) {
-            //isTigerBlood = true;
+            setTigerBlood();
             tigerBlood.setMarkedForRemoval(true);
         }
 
