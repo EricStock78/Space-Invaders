@@ -92,14 +92,17 @@ public class MooseTheGame extends Stage implements KeyListener {
     public void initWorld() {
         // ericsCar = new EricsCar(this, EricsCar.ePlayerNumber.PN_ONE);
         car = new Car(this);
+        actors.add(car);
 
        // tnt = new TNT(this);
         //paddleRight = new Paddle(this, Paddle.ePlayerNumber.PN_TWO);
         //ball = new Ball(this);
 
         timbit = new Timbit(this);
+        actors.add(timbit);
         coffee = new Coffee(this);
         moose = new Moose(this);
+        actors.add(moose);
     }
 
     public void paintWorld() {
@@ -123,11 +126,11 @@ public class MooseTheGame extends Stage implements KeyListener {
             actor.paint(g);
         }
 
-        car.paint(g);
+       // car.paint(g);
 
         //tnt.paint(g);
-        moose.paint(g);
-        timbit.paint(g);
+       // moose.paint(g);
+       // timbit.paint(g);
 
         coffee.paint(g);
         if (splat != null) {
@@ -156,21 +159,21 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         roadHorizontalOffset += 10;
         roadHorizontalOffset %= Stage.WIDTH;
-
+// TODO: 2019-08-08  for loop size of actors array  check each for isMarkedForRemoval then actors.remove(i) then i--
         car.update();
         moose.update();
         timbit.update();
         coffee.update();
        // tnt.update();
+//
+//        if (splat != null) {
+//            splat.update();
+//            splatFrames++;
+//
+//            if (splatFrames > 60) {
+//                splat = null;
+//            }
 
-        if (splat != null) {
-            splat.update();
-            splatFrames++;
-
-            if (splatFrames > 60) {
-                splat = null;
-            }
-        }
         //paddleRight.update();
         //ball.update();
     }
@@ -180,6 +183,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         // TODO: 2019-08-07  make timbit disapear once hit
         // TODO: 2019-08-07 make coffee disapear once hit
         if (car.getBounds().intersects(timbit.getBounds())){
+            health+=10;
             System.out.println("yumm!");
             timbit.setMarkedForRemoval(true);//dose not work :(
 

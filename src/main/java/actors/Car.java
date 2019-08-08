@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Car extends Actor implements KeyboardControllable {
     private boolean up,down,left,right;
     private boolean isWASD; // for switching between controls
-    private ArrayList<String> cars = new ArrayList();// to be used to select between cars
+    private ArrayList<String> cars = new ArrayList<>();// to be used to select between cars
     private int carHealth;
 
     public Car(Stage stage) {
