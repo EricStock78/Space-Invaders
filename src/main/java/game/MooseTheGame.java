@@ -28,9 +28,10 @@ public class MooseTheGame extends Stage implements KeyListener {
     public BufferStrategy strategy;     //double buffering strategy
     public int roadHorizontalOffset;
 
-    private TNT tnt;
+    //private TNT tnt;
     private Timbit timbit;
     private Coffee coffee;
+    private Moose moose;
 
     private Splat splat;
     private int splatFrames;
@@ -43,7 +44,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     public MooseTheGame() {
         //init the UI
         setBounds(0, 0, Stage.WIDTH, Stage.HEIGHT);
-        setBackground(Color.BLUE);
+        setBackground(Color.black);
 
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(Stage.WIDTH, Stage.HEIGHT));
@@ -92,12 +93,13 @@ public class MooseTheGame extends Stage implements KeyListener {
         // ericsCar = new EricsCar(this, EricsCar.ePlayerNumber.PN_ONE);
         car = new Car(this);
 
-        tnt = new TNT(this);
+       // tnt = new TNT(this);
         //paddleRight = new Paddle(this, Paddle.ePlayerNumber.PN_TWO);
         //ball = new Ball(this);
 
         timbit = new Timbit(this);
         coffee = new Coffee(this);
+        moose = new Moose(this);
     }
 
     public void paintWorld() {
@@ -123,8 +125,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         car.paint(g);
 
-        tnt.paint(g);
-
+        //tnt.paint(g);
+        moose.paint(g);
         timbit.paint(g);
 
         coffee.paint(g);
@@ -156,8 +158,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         roadHorizontalOffset %= Stage.WIDTH;
 
         car.update();
-
-        tnt.update();
+        moose.update();
+       // tnt.update();
 
         if (splat != null) {
             splat.update();
@@ -173,7 +175,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private void checkCollision() {
 
-        if (car.getBounds().intersects(tnt.getBounds())) {
+        if (car.getBounds().intersects(moose.getBounds())) {
            gameOver=true;
 
             System.out.println("i hit the thing");
