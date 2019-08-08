@@ -185,7 +185,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void setTigerBlood() {
-        final Timer tigerTimer = new Timer();
+         final Timer tigerTimer = new Timer();
 
         try {
             hitBlood = true;
@@ -194,11 +194,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                 @Override
                 public void run() {
                     hitBlood = false;
-                    int count = 1;
-
-                    if (count == 1) {
-                        tigerTimer.cancel();
-                    }
+                    tigerTimer.cancel();
                 }
             }, 10000, 1);
         }
@@ -206,6 +202,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             tigerTimer.cancel();
         }
     }
+
 
     public void paint(Graphics g) {
     }
