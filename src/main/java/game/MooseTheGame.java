@@ -38,14 +38,10 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Coffee coffee;
     private Moose moose;
     private TigerBlood tigerBlood;
-    private int health = 100;
+    protected int health = 100;
     private int score;
     private boolean hitBlood = false;
-    private boolean isMoose;
-    private boolean isTimbit;
-    private boolean isboold;
-    private boolean isCoffee;
-    private boolean isPotHole;
+
 
     private Splat splat;
     private int splatFrames;
@@ -111,16 +107,17 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     public void initWorld() {
         car = new Car(this);
+
         actors.add(car);
 
-        timbit = new Timbit(this);
-        actors.add(timbit);
-        coffee = new Coffee(this);
-        actors.add(coffee);
-        moose = new Moose(this);
-        actors.add(moose);
-        tigerBlood = new TigerBlood(this);
-        actors.add(tigerBlood);
+//        timbit = new Timbit(this);
+//        actors.add(timbit);
+//        coffee = new Coffee(this);
+//        actors.add(coffee);
+//        moose = new Moose(this);
+//        actors.add(moose);
+//        tigerBlood = new TigerBlood(this);
+//        actors.add(tigerBlood);
 
     }
 
@@ -186,7 +183,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void setTigerBlood() {
-         final Timer tigerTimer = new Timer();
+        final Timer tigerTimer = new Timer();
 
         try {
             hitBlood = true;
@@ -213,6 +210,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         roadHorizontalOffset %= Stage.WIDTH;
 
         for (int i = 0; i < actors.size(); i++) {
+            System.out.println(actors.get(i).toString());
             if (actors.get(i).isMarkedForRemoval()) {
                 actors.remove(i);
                 i--;
@@ -236,33 +234,76 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         // TODO: 2019-08-07 fix the removal of timbit and coffee
 
-        if(isTimbit){
+        for (int i = 0; i < actors.size(); i++) {
+            if (actors.get(i) instanceof Moose) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    gameOver = true;
+
+                }
+            }
+
+            if (actors.get(i) instanceof Timbit) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    health += 10;
+                    actors.get(i).setMarkedForRemoval(true);
+                }
+
+            }
+            if (actors.get(i) instanceof TigerBlood) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    setTigerBlood();
+                    actors.get(i).setMarkedForRemoval(true);
+                }
+
+            }
+            if (actors.get(i) instanceof PotHole) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    actors.get(i).setMarkedForRemoval(true);
 
 
-        if (car.getBounds().intersects(timbit.getBounds())) {
-            health += 10;
-            //System.out.println("yumm!");
-            timbit.setMarkedForRemoval(true);
-        }}
-        if(isCoffee){
-            if (car.getBounds().intersects(coffee.getBounds())) {
-            health += 10;
-            //System.out.println("yumm!");
-            coffee.setMarkedForRemoval(true);
-        }}
-            if(isboold){
+                }
+                if (actors.get(i) instanceof Coffee) {
+                    if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                        actors.get(i).setMarkedForRemoval(true);
+                        System.out.println("hit a coffee");
+                    }
 
+                }
 
-                    if (car.getBounds().intersects(tigerBlood.getBounds())) {
-            setTigerBlood();
-            tigerBlood.setMarkedForRemoval(true);
-        }}
-            if(isMoose){
-        if (car.getBounds().intersects(moose.getBounds()) || health == 0) {
-            gameOver = true;
+            }
+        }
 
-            //System.out.println("i hit the thing");
-        }}
+//        if (isTimbit) {
+//
+//
+//            if (car.getBounds().intersects(timbit.getBounds())) {
+//                health += 10;
+//                //System.out.println("yumm!");
+//                timbit.setMarkedForRemoval(true);
+//            }
+//        }
+//        if (isCoffee) {
+//            if (car.getBounds().intersects(coffee.getBounds())) {
+//                health += 10;
+//                //System.out.println("yumm!");
+//                coffee.setMarkedForRemoval(true);
+//            }
+//        }
+//        if (isboold) {
+//
+//
+//            if (car.getBounds().intersects(tigerBlood.getBounds())) {
+//                setTigerBlood();
+//                tigerBlood.setMarkedForRemoval(true);
+//            }
+//        }
+//        if (isMoose) {
+//            if (car.getBounds().intersects(moose.getBounds()) || health == 0) {
+//                gameOver = true;
+//
+//                //System.out.println("i hit the thing");
+//            }
+//        }
 
 
         //if( ball.getBounds().intersects(ericsCar.getBounds())) {
@@ -351,7 +392,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-      //   paintScore(g);
+        //   paintScore(g);
 
         //about 310 pixels wide
         g.setFont(new Font("Arial", Font.BOLD, 50));
@@ -362,7 +403,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         xPos += 30;
         g.setFont(new Font("Arial", Font.BOLD, 30));
         g.drawString("ENTER: try again", (xPos < 0 ? 0 : xPos), getHeight() / 2 + 50);
-
 
 
         strategy.show();
@@ -389,20 +429,20 @@ public class MooseTheGame extends Stage implements KeyListener {
             case 1:
                 moose = new Moose(this);
                 actors.add(moose);
-                isMoose = true;
+
                 break;
             case 2:
                 timbit = new Timbit(this);
                 actors.add(timbit);
-                isTimbit = true;
+
             case 3:
                 coffee = new Coffee(this);
                 actors.add(coffee);
-                isCoffee = true;
+
             case 4:
                 tigerBlood = new TigerBlood(this);
                 actors.add(tigerBlood);
-                isboold = true;
+
         }
     }
 
