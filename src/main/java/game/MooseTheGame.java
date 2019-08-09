@@ -50,7 +50,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     public MooseTheGame() {
         //init the UI
         setBounds(0, 0, Stage.WIDTH, Stage.HEIGHT);
-        setBackground(Color.black);
+        setBackground(new Color(73, 62, 92));
 
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(Stage.WIDTH, Stage.HEIGHT));
@@ -91,17 +91,10 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     }
 
-    public void paintMainMenu() {
-        start = new JButton();
-        start.setIcon(new ImageIcon("playButton.png"));
-        frame.add(start);
-    }
-
     public void initWorld() {
         car = new Car(this);
 
         actors.add(car);
-
 
     }
 
@@ -320,32 +313,98 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-
-        //about 310 pixels wide
-        g.setFont(new Font("Arial", Font.BOLD, 50));
-        g.setColor(Color.RED);
-        int xPos = getWidth() / 2 - 155;
-        g.drawString("GAME OVER", (xPos < 0 ? 0 : xPos), getHeight() / 2);
-
-        xPos += 30;
-        g.setFont(new Font("Arial", Font.BOLD, 30));
-        g.drawString("ENTER: try again", (xPos < 0 ? 0 : xPos), getHeight() / 2 + 50);
-
+        g.drawImage(ResourceLoader.getInstance().getSprite("goTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("retryButton.png"), 18, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 300, this);
 
         strategy.show();
     }
 
+    public void paintMainMenu() {
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
 
-    public void painOptionsMenu() {
+        g.drawImage(ResourceLoader.getInstance().getSprite("title.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("playButton.png"), 18, 250, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("highscoreButton.png"), 343, 250, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("customizeButton.png"), 667, 250, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("optionsButton.png"), 165, 380, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 515, 380, this);
 
+        strategy.show();
     }
 
     public void paintCustomizationMenu() {
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
+        strategy.show();
 
     }
 
     public void paintPauseMenu() {
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
 
+        g.drawImage(ResourceLoader.getInstance().getSprite("pausedTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("resumeButton.png"), 18, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 300, this);
+
+        strategy.show();
+    }
+
+    public void paintOptionsMenu() {
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        g.drawImage(ResourceLoader.getInstance().getSprite("optionsTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("controlsButton.png"), 18, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("videoButton.png"), 343, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("audioButton.png"), 667, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
+
+        strategy.show();
+
+    }
+
+    public void paintAudioOptionsMenu() {
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        g.drawImage(ResourceLoader.getInstance().getSprite("audioTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
+
+        strategy.show();
+    }
+
+    public void paintVideoOptionsMenu() {
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        g.drawImage(ResourceLoader.getInstance().getSprite("videoTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
+
+        strategy.show();
+    }
+
+    public void paintControlsOptionsMenu() {
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        g.drawImage(ResourceLoader.getInstance().getSprite("controlsTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
+
+        strategy.show();
     }
 
     private void actorGenerator() {
