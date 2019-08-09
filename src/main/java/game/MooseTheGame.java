@@ -266,8 +266,8 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (usedTime == 0) usedTime = 1;
             if (super.gameOver) {
                 paintGameOver();
-                continue;
-               // break; TODO: This lets game over screen go to main menu, but when play is pressed it goes back to the game over screen
+                //continue;
+                break; //TODO: This lets game over screen go to main menu, but when play is pressed it goes back to the game over screen
             }
             int timeDiff = 1000 / DESIRED_FPS - (int) (usedTime);
             if (timeDiff > 0) {
@@ -302,6 +302,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.drawImage(ResourceLoader.getInstance().getSprite("retryButton.png"), 18, 475, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 475, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 475, this);
+
+        writeFact();
 
         strategy.show();
     }
@@ -441,6 +443,52 @@ public class MooseTheGame extends Stage implements KeyListener {
                 actors.add(potHole);
                 break;
         }
+    }
+
+    public void writeFact() {
+        Random randy = new Random();
+        Graphics g = strategy.getDrawGraphics();
+
+        g.setColor(new Color(11, 33, 64));
+        g.setFont(new Font("BitPotionExt", 0, 60));
+        g.drawString("Did You Know?", 376, 240);
+        g.setFont(new Font("BitPotionExt", 0, 32));
+
+        int i = randy.nextInt(6);
+
+        if (i == 0) {
+            g.drawString("Even in areas with very low moose density,", 282, 290);
+            g.drawString("moose are still attracted to roadways and", 282, 320);
+            g.drawString("can pose a hazard to drivers.", 282, 350);
+        }
+        else if (i == 1) {
+            g.drawString("Most accidents occur on clear nights and on", 282, 290);
+            g.drawString("straight road sections. ", 282, 320);
+            g.drawString("Don't let yourself be distracted.", 282, 350);
+        }
+        else if (i == 2) {
+            g.drawString("More than 70% of accidents occur between", 282, 290);
+            g.drawString("May and October. The most critical", 282, 320);
+            g.drawString("months are June, July, and August.", 282, 350);
+            g.drawString("However, moose accidents can occur all year.", 282, 380);
+        }
+        else if (i == 3) {
+            g.drawString("More accidents occur on certain sections of", 282, 290);
+            g.drawString("the highway. These areas are marked with", 282, 320);
+            g.drawString("moose crossing warning signs.", 282, 350);
+        }
+        else if (i == 4) {
+            g.drawString("Moose accidents are estimated to cost more", 282, 290);
+            g.drawString("than $1 million annually.", 282, 320);
+        }
+
+        else if (i == 5) {
+            g.drawString("Care and attention when driving is your", 282, 290);
+            g.drawString("best defense against moose-vehicle accidents.", 282, 320);
+        }
+
+        g.setFont(new Font("BitPotionExt", 0, 23));
+        g.drawString("https://www.flr.gov.nl.ca/wildlife/moose_vehicle_awareness.html", 282, 440);
     }
 
     public void keyPressed(KeyEvent e) {
