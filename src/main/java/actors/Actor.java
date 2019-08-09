@@ -32,7 +32,7 @@ public class Actor {
 	public Actor(Stage canvas, int width, int height, int collisionWidth, int collisionHeight) {
 		this.stage = canvas;
 		frame = 0;
-		frameSpeed = 1;
+		frameSpeed = 10;
 		actorSpeed = 10;
 		time = 0;
 		this.width = width;
