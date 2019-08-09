@@ -27,11 +27,79 @@ public class InputHandler {
     public void handleInput(KeyEvent event) {
         if (action == Action.PRESS) {
             if (KeyEvent.VK_ENTER == event.getKeyCode()) {
-                if (stage.gameOver || stage.gameWon) {
+                if (stage.gameOver) {
                     stage.resetGame();
-                    //stage.game();
+                }
+
+                else if (stage.game) {
+                    stage.paintPauseMenu();
                 }
             }
+
+            else if (event.getKeyChar() == 'A' || event.getKeyChar() == 'a') {
+                if (stage.optionsMenu) {
+                    stage.paintAudioOptionsMenu();
+                }
+            }
+
+            else if (event.getKeyChar() == 'B' || event.getKeyChar() == 'b') {
+                if (stage.optionsMenu || stage.customizationMenu || stage.highscoreMenu) {
+                    stage.paintMainMenu();
+                }
+
+                else if (stage.controlsOptionsMenu || stage.audioOptionsMenu || stage.videoOptionsMenu) {
+                    stage.paintOptionsMenu();
+                }
+            } // End B
+
+            else if (event.getKeyChar() == 'C' || event.getKeyChar() == 'c') {
+                if (stage.mainMenu) {
+                    stage.paintCustomizationMenu();
+                }
+
+                else if (stage.optionsMenu) {
+                    stage.paintControlsOptionsMenu();
+                }
+            } // End C
+
+            else if (event.getKeyChar() == 'H' || event.getKeyChar() == 'h') {
+                if (stage.mainMenu) {
+                    stage.paintHighscoreMenu();
+                }
+            } // End H
+
+            // TODO: Unable to exit to main menu from game over screen
+            else if (event.getKeyChar() == 'M' || event.getKeyChar() == 'm') {
+                if (stage.gameOver) {
+                    stage.paintMainMenu();
+                }
+            } // End M
+
+            else if (event.getKeyChar() == 'O' || event.getKeyChar() == 'o') {
+                if (stage.mainMenu) {
+                    stage.paintOptionsMenu();
+                }
+            } // End O
+
+            else if (event.getKeyChar() == 'P' || event.getKeyChar() == 'p') {
+                // TODO: Game does not init properly when started this way ex. no controls, cant close window
+                if (stage.mainMenu) {
+                    stage.game();
+                }
+            } // End P
+
+            else if (event.getKeyChar() == 'Q' || event.getKeyChar() == 'q') {
+                if (stage.mainMenu || stage.pauseMenu || stage.gameOver) {
+                    System.exit(0);
+                }
+            } // End Q
+
+            else if (event.getKeyChar() == 'V' || event.getKeyChar() == 'v') {
+                if (stage.optionsMenu) {
+                    stage.paintVideoOptionsMenu();
+                }
+            }
+
             else
                 player.triggerKeyPress(event);
         }

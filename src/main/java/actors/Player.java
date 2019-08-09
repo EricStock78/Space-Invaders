@@ -7,6 +7,7 @@ public class Player extends Actor implements KeyboardControllable {
 	
 	private boolean up,down,left,right;
 	private int score = 0;
+	private int maxHealth = 100;
 	
 	public Player(Stage stage) {
 		super(stage, 32, 20, 32, 20);
@@ -110,7 +111,7 @@ public class Player extends Actor implements KeyboardControllable {
 		return score;
 	}
         
-        public void resetScore() {
+	public void resetScore() {
             score = 0;
         }
 }
