@@ -68,7 +68,7 @@ public class InputHandler {
                 }
             } // End H
 
-            // TODO: Unable to exit to main menu from game over screen
+        
             else if (event.getKeyChar() == 'M' || event.getKeyChar() == 'm') {
                 if (stage.gameOver) {
                     stage.paintMainMenu();

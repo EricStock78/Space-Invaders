@@ -195,7 +195,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private void checkCollision() {
 
-// TODO: 2019-08-08 fix removal of coffee
+// TODO:  fix removal of coffee
+// TODO:  potholes do not disapear when you hit them and nether should ours
         for (int i = 0; i < actors.size(); i++) {
 
             if (actors.get(i) instanceof Moose) {
@@ -221,11 +222,13 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (actors.get(i) instanceof PotHole) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
                     car.loseHealth(25);
+                    System.out.println("");
+                    actors.get(i).setMarkedForRemoval(true);
 
                     if (car.getCurrentHealth() == 0) {
                         paintGameOver();
                     }
-                    actors.get(i).setMarkedForRemoval(true);
+                    //actors.get(i).setMarkedForRemoval(true);
                 }
 
                 if (actors.get(i) instanceof Coffee) {
@@ -413,11 +416,22 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     private void actorGenerator() {
-        // TODO: 2019-08-08 adjust for better spawn rates--> if randy.nextInt() between x and y picker = a
+
 
         Random randy = new Random();
-        int picker = randy.nextInt(1000);
-
+        int randNum = randy.nextInt(10000);
+        int picker = 0;
+        if (randNum < 50) {
+            picker = 1;
+        } else if (randNum > 100 && randNum < 300) {
+            picker = 5;
+        } else if (randNum > 300 && randNum < 350) {
+            picker = 2;
+        } else if (randNum > 350 && randNum < 400) {
+            picker = 3;
+        } else if (randNum > 400 && randNum < 415) {
+            picker = 4;
+        }
         switch (picker) {
             case 1:
                 Moose moose = new Moose(this);
@@ -460,29 +474,23 @@ public class MooseTheGame extends Stage implements KeyListener {
             g.drawString("Even in areas with very low moose density,", 282, 290);
             g.drawString("moose are still attracted to roadways and", 282, 320);
             g.drawString("can pose a hazard to drivers.", 282, 350);
-        }
-        else if (i == 1) {
+        } else if (i == 1) {
             g.drawString("Most accidents occur on clear nights and on", 282, 290);
             g.drawString("straight road sections. ", 282, 320);
             g.drawString("Don't let yourself be distracted.", 282, 350);
-        }
-        else if (i == 2) {
+        } else if (i == 2) {
             g.drawString("More than 70% of accidents occur between", 282, 290);
             g.drawString("May and October. The most critical", 282, 320);
             g.drawString("months are June, July, and August.", 282, 350);
             g.drawString("However, moose accidents can occur all year.", 282, 380);
-        }
-        else if (i == 3) {
+        } else if (i == 3) {
             g.drawString("More accidents occur on certain sections of", 282, 290);
             g.drawString("the highway. These areas are marked with", 282, 320);
             g.drawString("moose crossing warning signs.", 282, 350);
-        }
-        else if (i == 4) {
+        } else if (i == 4) {
             g.drawString("Moose accidents are estimated to cost more", 282, 290);
             g.drawString("than $1 million annually.", 282, 320);
-        }
-
-        else if (i == 5) {
+        } else if (i == 5) {
             g.drawString("Care and attention when driving is your", 282, 290);
             g.drawString("best defense against moose-vehicle accidents.", 282, 320);
         }
@@ -503,7 +511,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         keyReleasedHandlerLeft.handleInput(e);
     }
 
-    public void keyTyped(KeyEvent e) { }
+    public void keyTyped(KeyEvent e) {
+    }
 
     public static void main(String[] args) {
         MooseTheGame mooseGame = new MooseTheGame();
