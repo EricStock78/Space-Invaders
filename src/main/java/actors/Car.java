@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public class Car extends Actor implements KeyboardControllable {
     private boolean up,down,left,right;
     private boolean isWASD; // for switching between controls
+    private final int MAXHEALTH;
+    private int currentHealth;
     private ArrayList<String> cars = new ArrayList<>();// to be used to select between cars
 
 
@@ -17,6 +19,8 @@ public class Car extends Actor implements KeyboardControllable {
         cars.add("Car.png");// convert to method
         cars.add("Car1.png");
         sprites = new String[]{cars.get(1)};
+        MAXHEALTH = 100;
+        currentHealth = MAXHEALTH;
 
         frame = 0;
         frameSpeed = 35;
@@ -90,6 +94,32 @@ public class Car extends Actor implements KeyboardControllable {
             case KeyEvent.VK_DOWN:
                 down = true;
                 break;
+        }
+    }
+
+    public int getMaxHealth() {
+        return MAXHEALTH;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public void loseHealth(int damage) {
+        if ((currentHealth - damage) < 0) {
+            currentHealth = 0;
+        }
+        else {
+            currentHealth -= damage;
+        }
+    }
+
+    public void gainHealth(int health) {
+        if ((currentHealth + health) > MAXHEALTH) {
+            currentHealth = MAXHEALTH;
+        }
+        else {
+            currentHealth += health;
         }
     }
 }

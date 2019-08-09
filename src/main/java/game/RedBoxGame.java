@@ -72,7 +72,6 @@ public class RedBoxGame extends Stage implements KeyListener {
     public void initWorld() {
         actors = new ArrayList<Actor>();
         gameOver = false;
-        gameWon = false;
         bear = new Bear(this);
         keyPressedHandler = new InputHandler(this, bear);
         keyPressedHandler.action = InputHandler.Action.PRESS;

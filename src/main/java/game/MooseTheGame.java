@@ -23,29 +23,14 @@ public class MooseTheGame extends Stage implements KeyListener {
     private InputHandler keyPressedHandlerLeft;
     private InputHandler keyReleasedHandlerLeft;
 
-    private InputHandler keyPressedHandlerRight;
-    private InputHandler keyReleasedHandlerRight;
-    private BufferedImage playBtn, playTile; //playBtn cache
-    private int backgroundY; //playBtn cache position
-
     public long usedTime; //time taken per game step
     public BufferStrategy strategy;     //double buffering strategy
     public int roadHorizontalOffset;
 
     private JFrame frame;
     private Car car;
-    private int health = 100;
     private int score;
     private boolean hitBlood = false;
-
-
-    private Splat splat;
-    private int splatFrames;
-
-    private JButton start;
-    private JButton options;
-    private JButton customize;
-    private JButton exit;
 
     public MooseTheGame() {
         //init the UI
@@ -58,7 +43,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         panel.add(this);
 
-        frame = new JFrame("Moose The Game");
+        frame = new JFrame("MOOSE: The Game");
         frame.add(panel);
 
         frame.setBounds(0, 0, Stage.WIDTH, Stage.HEIGHT);
@@ -73,7 +58,6 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
         });
 
-
         addKeyListener(this);
 
         //create a double buffer
@@ -81,21 +65,18 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy = getBufferStrategy();
         requestFocus();
         initWorld();
-        //paintMainMenu();
+        ResourceLoader.createFont();
 
         keyPressedHandlerLeft = new InputHandler(this, car);
         keyPressedHandlerLeft.action = InputHandler.Action.PRESS;
         keyReleasedHandlerLeft = new InputHandler(this, car);
         keyReleasedHandlerLeft.action = InputHandler.Action.RELSEASE;
-
-
     }
 
     public void initWorld() {
         car = new Car(this);
 
         actors.add(car);
-
     }
 
     public void paintWorld() {
@@ -120,10 +101,11 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
 
         paintScore(g, score);
+        drawHealthBar(car.getCurrentHealth());
+
 
         //swap buffer
         strategy.show();
-
     }
 
     public void paintFPS(Graphics g) {
@@ -136,7 +118,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     public void paintScore(Graphics g, int score) {
         g.setColor(Color.RED);
-        g.drawString(String.valueOf(score), Stage.WIDTH - 700, Stage.HEIGHT - 50);
+        g.setFont(new Font("BitPotionExt", 0, 48));
+        g.drawString(String.valueOf(score), 310, 545);
     }
 
     public void trackScore() {
@@ -159,6 +142,20 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
     }
 
+    public void drawHealthBar(int health) {
+        Graphics g = strategy.getDrawGraphics();
+        int fillAmount = (int) (car.getCurrentHealth() * 2.5);
+
+        g.setColor(new Color(81, 217, 61));
+        g.fillRect(38, 523, 250, 27);
+        g.setColor(Color.BLACK);
+        g.fillRect(40, 525, 246, 23);
+        g.setColor(new Color(81, 217, 61));
+        g.fillRect(38, 523, fillAmount, 27);
+
+        g.drawImage(ResourceLoader.getInstance().getSprite("healthPlus.png"), 10, 521, this);
+    }
+
     public void setTigerBlood() {
         final Timer tigerTimer = new Timer();
 
@@ -177,7 +174,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
     }
 
-
     public void paint(Graphics g) {
     }
 
@@ -187,59 +183,59 @@ public class MooseTheGame extends Stage implements KeyListener {
         roadHorizontalOffset %= Stage.WIDTH;
 
         for (int i = 0; i < actors.size(); i++) {
-            System.out.println(actors.get(i).toString());
+            //System.out.println(actors.get(i).toString());
             if (actors.get(i).isMarkedForRemoval()) {
                 actors.remove(i);
                 i--;
             }
+
             actors.get(i).update();
         }
-
     }
 
     private void checkCollision() {
 
 // TODO: 2019-08-08 fix removal of coffee
         for (int i = 0; i < actors.size(); i++) {
+
             if (actors.get(i) instanceof Moose) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    gameOver = true;
-
+                    paintGameOver();
                 }
             }
 
             if (actors.get(i) instanceof Timbit) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    health += 10;
+                    car.gainHealth(15);
                     actors.get(i).setMarkedForRemoval(true);
                 }
-
             }
+
             if (actors.get(i) instanceof TigerBlood) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
                     setTigerBlood();
                     actors.get(i).setMarkedForRemoval(true);
                 }
-
             }
+
             if (actors.get(i) instanceof PotHole) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    health-=5;
+                    car.loseHealth(25);
+
+                    if (car.getCurrentHealth() == 0) {
+                        paintGameOver();
+                    }
                     actors.get(i).setMarkedForRemoval(true);
-
-
                 }
+
                 if (actors.get(i) instanceof Coffee) {
                     if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                        score += 5;
                         actors.get(i).setMarkedForRemoval(true);
-                        System.out.println("hit a coffee");
                     }
-
                 }
-
             }
         }
-
     }
 
     public void loopSound(final String name) {
@@ -256,6 +252,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         /*************************************************************************************************************
          *                                                      GAME LOOP
          **************************************************************************************************************/
+        inGame();
         usedTime = 0;
         trackScore();
 
@@ -270,6 +267,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (super.gameOver) {
                 paintGameOver();
                 continue;
+               // break; TODO: This lets game over screen go to main menu, but when play is pressed it goes back to the game over screen
             }
             int timeDiff = 1000 / DESIRED_FPS - (int) (usedTime);
             if (timeDiff > 0) {
@@ -280,7 +278,6 @@ public class MooseTheGame extends Stage implements KeyListener {
                 }
             }
 
-
             actorGenerator();
             updateWorld();
             paintWorld();
@@ -289,44 +286,33 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
     }
 
-    public void keyPressed(KeyEvent e) {
-        keyPressedHandlerLeft.handleInput(e);
-
-        if (e.getKeyCode() == KeyEvent.VK_K) {
-            Actor.debugCollision = !Actor.debugCollision;
-        }
-
-
-    }
-
-    public void keyReleased(KeyEvent e) {
-        keyReleasedHandlerLeft.handleInput(e);
-
-    }
-
-    public void keyTyped(KeyEvent e) {
-    }
-
-
     public void paintGameOver() {
+        endGame();
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        g.drawImage(ResourceLoader.getInstance().getSprite("goTitle.png"), 190, 40, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("retryButton.png"), 18, 300, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 300, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 300, this);
+        g.setColor(new Color(48, 48, 48));
+        g.fillRect(230, 190, 520, 270);
+
+        g.setColor(Color.WHITE);
+        g.fillRect(240, 200, 500, 250);
+
+        g.drawImage(ResourceLoader.getInstance().getSprite("goTitle.png"), 190, 30, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("retryButton.png"), 18, 475, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 475, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 475, this);
 
         strategy.show();
     }
 
     public void paintMainMenu() {
+        onMainMenu();
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        g.drawImage(ResourceLoader.getInstance().getSprite("title.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("title.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("playButton.png"), 18, 250, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("highscoreButton.png"), 343, 250, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("customizeButton.png"), 667, 250, this);
@@ -337,21 +323,23 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void paintCustomizationMenu() {
+        onCustomizationMenu();
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
+        g.drawImage(ResourceLoader.getInstance().getSprite("customizeTitle.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
         strategy.show();
-
     }
 
     public void paintPauseMenu() {
+        onPauseMenu();
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        g.drawImage(ResourceLoader.getInstance().getSprite("pausedTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("pausedTitle.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("resumeButton.png"), 18, 300, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 300, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 300, this);
@@ -360,48 +348,63 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void paintOptionsMenu() {
+        onOptionsMenu();
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        g.drawImage(ResourceLoader.getInstance().getSprite("optionsTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("optionsTitle.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("controlsButton.png"), 18, 300, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("videoButton.png"), 343, 300, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("audioButton.png"), 667, 300, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
 
         strategy.show();
-
     }
 
     public void paintAudioOptionsMenu() {
+        onAudioOptionsMenu();
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        g.drawImage(ResourceLoader.getInstance().getSprite("audioTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("audioTitle.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
 
         strategy.show();
     }
 
     public void paintVideoOptionsMenu() {
+        onVideoOptionsMenu();
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        g.drawImage(ResourceLoader.getInstance().getSprite("videoTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("videoTitle.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
 
         strategy.show();
     }
 
     public void paintControlsOptionsMenu() {
+        onControlsOptionsMenu();
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        g.drawImage(ResourceLoader.getInstance().getSprite("controlsTitle.png"), 190, 40, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("controlsTitle.png"), 190, 30, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
+
+        strategy.show();
+    }
+
+    public void paintHighscoreMenu() {
+        onHighscoreMenu();
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        g.drawImage(ResourceLoader.getInstance().getSprite("highscoreTitle.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
 
         strategy.show();
@@ -437,10 +440,27 @@ public class MooseTheGame extends Stage implements KeyListener {
                 PotHole potHole = new PotHole(this);
                 actors.add(potHole);
                 break;
-
-
         }
     }
 
+    public void keyPressed(KeyEvent e) {
+        keyPressedHandlerLeft.handleInput(e);
+
+        if (e.getKeyCode() == KeyEvent.VK_K) {
+            Actor.debugCollision = !Actor.debugCollision;
+        }
+    }
+
+    public void keyReleased(KeyEvent e) {
+        keyReleasedHandlerLeft.handleInput(e);
+    }
+
+    public void keyTyped(KeyEvent e) { }
+
+    public static void main(String[] args) {
+        MooseTheGame mooseGame = new MooseTheGame();
+        //mooseGame.paintMainMenu();
+        mooseGame.game();
+    }
 
 }
