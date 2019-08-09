@@ -221,15 +221,15 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             if (actors.get(i) instanceof PotHole) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    car.loseHealth(25);
-                    System.out.println("");
-                    actors.get(i).setMarkedForRemoval(true);
+                    car.loseHealth(1);
+                   // System.out.println("");
+
 
                     if (car.getCurrentHealth() == 0) {
                         paintGameOver();
                     }
                     //actors.get(i).setMarkedForRemoval(true);
-                }
+                }}
 
                 if (actors.get(i) instanceof Coffee) {
                     if (car.getBounds().intersects(actors.get(i).getBounds())) {
@@ -239,7 +239,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                 }
             }
         }
-    }
+
 
     public void loopSound(final String name) {
         new Thread(new Runnable() {
@@ -270,6 +270,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (super.gameOver) {
                 paintGameOver();
                 //continue;
+                System.out.println("i am game overing");
                 break; //TODO: This lets game over screen go to main menu, but when play is pressed it goes back to the game over screen
             }
             int timeDiff = 1000 / DESIRED_FPS - (int) (usedTime);
@@ -306,7 +307,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 475, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 475, this);
 
-        writeFact();
+        //writeFact();
 
         strategy.show();
     }
