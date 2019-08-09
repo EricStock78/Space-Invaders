@@ -117,7 +117,7 @@ public class ResourceLoader implements ImageObserver {
 		try {
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			BufferedInputStream myStream = new BufferedInputStream(
-					new FileInputStream(("C:\\Users\\user\\IdeaProjects\\Space-Invaders\\src\\main\\resources\\res\\BitPotionExt.ttf")));
+					new FileInputStream(("Space-Invaders\\src\\main\\resources\\res\\BitPotionExt.ttf")));
 			Font bitPotion = Font.createFont(Font.TRUETYPE_FONT, myStream);
 			//Font bitPotion = ttfBase.deriveFont(Font.PLAIN, 32);
 			ge.registerFont(bitPotion);
