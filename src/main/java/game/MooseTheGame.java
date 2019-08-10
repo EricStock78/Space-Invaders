@@ -33,6 +33,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Car car;
     private int score;
     private boolean hitBlood = false;
+    ArrayList<String> factList;
 
     public MooseTheGame() {
         //init the UI
@@ -191,6 +192,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
     }
 
+
+
     private void checkCollision() {
 
 
@@ -199,6 +202,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (actors.get(i) instanceof Moose) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
                     //getFact()
+                     factList = getFact();
                     paintGameOver();
                 }
             }
@@ -225,6 +229,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
                     if (car.getCurrentHealth() == 0) {
                         //getFact()
+                         factList = getFact();
                         paintGameOver();
                     }
                     //actors.get(i).setMarkedForRemoval(true);
@@ -327,7 +332,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 475, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 475, this);
 
-        //    writeFact();
+           writeFact();
 
         strategy.show();
     }
@@ -481,7 +486,6 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         }
     }
-
     // TODO: 2019-08-10  replace strings with getFact method
     public void writeFact() {
         Random randy = new Random();
@@ -491,40 +495,76 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.setFont(new Font("BitPotionExt", 0, 60));
         g.drawString("Did You Know?", 376, 240);
         g.setFont(new Font("BitPotionExt", 0, 32));
+int y =290;
+        // TODO: 2019-08-10 turn into for each loop
+        for (String fact : factList){
+            g.drawString(fact, 282, y);
+            y+=30;
 
-        int i = randy.nextInt(6);
-
-        if (i == 0) {
-            g.drawString("Even in areas with very low moose density,", 282, 290);
-            g.drawString("moose are still attracted to roadways and", 282, 320);
-            g.drawString("can pose a hazard to drivers.", 282, 350);
-        } else if (i == 1) {
-            g.drawString("Most accidents occur on clear nights and on", 282, 290);
-            g.drawString("straight road sections. ", 282, 320);
-            g.drawString("Don't let yourself be distracted.", 282, 350);
-        } else if (i == 2) {
-            g.drawString("More than 70% of accidents occur between", 282, 290);
-            g.drawString("May and October. The most critical", 282, 320);
-            g.drawString("months are June, July, and August.", 282, 350);
-            g.drawString("However, moose accidents can occur all year.", 282, 380);
-        } else if (i == 3) {
-            g.drawString("More accidents occur on certain sections of", 282, 290);
-            g.drawString("the highway. These areas are marked with", 282, 320);
-            g.drawString("moose crossing warning signs.", 282, 350);
-        } else if (i == 4) {
-            g.drawString("Moose accidents are estimated to cost more", 282, 290);
-            g.drawString("than $1 million annually.", 282, 320);
-        } else if (i == 5) {
-            g.drawString("Care and attention when driving is your", 282, 290);
-            g.drawString("best defense against moose-vehicle accidents.", 282, 320);
         }
+//
+//        if (i == 0) {
+//            g.drawString("Even in areas with very low moose density,", 282, 290);
+//            g.drawString("moose are still attracted to roadways and", 282, 320);
+//            g.drawString("can pose a hazard to drivers.", 282, 350);
+//        } else if (i == 1) {
+//            g.drawString("Most accidents occur on clear nights and on", 282, 290);
+//            g.drawString("straight road sections. ", 282, 320);
+//            g.drawString("Don't let yourself be distracted.", 282, 350);
+//        } else if (i == 2) {
+//            g.drawString("More than 70% of accidents occur between", 282, 290);
+//            g.drawString("May and October. The most critical", 282, 320);
+//            g.drawString("months are June, July, and August.", 282, 350);
+//            g.drawString("However, moose accidents can occur all year.", 282, 380);
+//        } else if (i == 3) {
+//            g.drawString("More accidents occur on certain sections of", 282, 290);
+//            g.drawString("the highway. These areas are marked with", 282, 320);
+//            g.drawString("moose crossing warning signs.", 282, 350);
+//        } else if (i == 4) {
+//            g.drawString("Moose accidents are estimated to cost more", 282, 290);
+//            g.drawString("than $1 million annually.", 282, 320);
+//        } else if (i == 5) {
+//            g.drawString("Care and attention when driving is your", 282, 290);
+//            g.drawString("best defense against moose-vehicle accidents.", 282, 320);
+//        }
 
         g.setFont(new Font("BitPotionExt", 0, 23));
         g.drawString("https://www.flr.gov.nl.ca/wildlife/moose_vehicle_awareness.html", 282, 440);
     }
     // TODO: 2019-08-10  create a static fact that will be generated on game over
-    //public String getFact() {
-    // }
+    public ArrayList<String> getFact() {
+        ArrayList<String> factBuilder = new ArrayList<>();
+        Random randy = new Random();
+        int i = randy.nextInt(6);
+
+        if (i == 0) {
+            factBuilder.add("Even in areas with very low moose density,");
+            factBuilder.add("moose are still attracted to roadways and");
+            factBuilder.add("can pose a hazard to drivers.");
+        } else if (i == 1) {
+            factBuilder.add("Most accidents occur on clear nights and on");
+            factBuilder.add("straight road sections. ");
+            factBuilder.add("Don't let yourself be distracted.");
+        } else if (i == 2) {
+            factBuilder.add("More than 70% of accidents occur between");
+            factBuilder.add("May and October. The most critical");
+            factBuilder.add("months are June, July, and August.");
+            factBuilder.add("However, moose accidents can occur all year.");
+        } else if (i == 3) {
+            factBuilder.add("More accidents occur on certain sections of");
+            factBuilder.add("the highway. These areas are marked with");
+            factBuilder.add("moose crossing warning signs.");
+        } else if (i == 4) {
+            factBuilder.add("Moose accidents are estimated to cost more");
+            factBuilder.add("than $1 million annually.");
+        } else if (i == 5) {
+            factBuilder.add("Care and attention when driving is your");
+            factBuilder.add("best defense against moose-vehicle accidents.");
+        }
+        return factBuilder;
+
+    }
+
 
 
     public void keyPressed(KeyEvent e) {

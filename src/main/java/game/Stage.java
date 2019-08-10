@@ -97,6 +97,7 @@ public class Stage extends Canvas implements ImageObserver {
 	}
 
 	public void inGame() {
+
 	    game = true;
         optionsMenu = false;
         gameOver = false;
@@ -233,10 +234,7 @@ public class Stage extends Canvas implements ImageObserver {
     public void paintHighscoreMenu() {
 
     }
-    
-    public void resetGame() {
-   
-    }
+
 
 
 }
