@@ -28,7 +28,9 @@ public class InputHandler {
         if (action == Action.PRESS) {
             if (KeyEvent.VK_ENTER == event.getKeyCode()) {
                 if (stage.gameOver) {
-                    stage.resetGame();
+                    stage.game();
+                    //stage.resetGame();
+                   // stage.inGame();
                 }
 
                 else if (stage.game) {
