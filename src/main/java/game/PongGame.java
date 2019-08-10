@@ -186,29 +186,13 @@ public class PongGame extends Stage implements KeyListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		try {
-			keyPressedHandlerLeft.handleInput(e);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		try {
-			keyPressedHandlerRight.handleInput(e);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		keyPressedHandlerLeft.handleInput(e);
+		keyPressedHandlerRight.handleInput(e);
 	}
 
 	public void keyReleased(KeyEvent e) {
-		try {
-			keyReleasedHandlerLeft.handleInput(e);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		try {
-			keyReleasedHandlerRight.handleInput(e);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		keyReleasedHandlerLeft.handleInput(e);
+		keyReleasedHandlerRight.handleInput(e);
 	}
 
 	public void keyTyped(KeyEvent e) {

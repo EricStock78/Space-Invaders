@@ -222,11 +222,7 @@ public class DriveDemo extends Stage implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e) {
-        try {
-            keyPressedHandlerLeft.handleInput(e);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        keyPressedHandlerLeft.handleInput(e);
 
         if( e.getKeyCode() == KeyEvent.VK_K) {
             Actor.debugCollision = !Actor.debugCollision;
@@ -236,11 +232,7 @@ public class DriveDemo extends Stage implements KeyListener {
     }
 
     public void keyReleased(KeyEvent e) {
-        try {
-            keyReleasedHandlerLeft.handleInput(e);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        keyReleasedHandlerLeft.handleInput(e);
         //keyReleasedHandlerRight.handleInput(e);
     }
 
