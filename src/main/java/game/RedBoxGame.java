@@ -124,19 +124,11 @@ public class RedBoxGame extends Stage implements KeyListener {
     }
     
     public void keyPressed(KeyEvent e) {
-        try {
-            keyPressedHandler.handleInput(e);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        keyPressedHandler.handleInput(e);
     }
 
 	public void keyReleased(KeyEvent e) {
-        try {
-            keyReleasedHandler.handleInput(e);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        keyReleasedHandler.handleInput(e);
     }
 
 	public void keyTyped(KeyEvent e) {

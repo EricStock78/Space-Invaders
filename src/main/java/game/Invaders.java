@@ -324,23 +324,15 @@ public class Invaders extends Stage implements KeyListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		try {
-			keyPressedHandler.handleInput(e);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		if( e.getKeyCode() == KeyEvent.VK_0) {
+        keyPressedHandler.handleInput(e);
+        if( e.getKeyCode() == KeyEvent.VK_0) {
 			Actor.debugCollision = !Actor.debugCollision;
 		}
 	}
 
 	public void keyReleased(KeyEvent e) {
-		try {
-			keyReleasedHandler.handleInput(e);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+        keyReleasedHandler.handleInput(e);
+    }
 
 	public void keyTyped(KeyEvent e) {
 	}
