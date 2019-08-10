@@ -3,6 +3,7 @@ package game;
 import java.awt.Canvas;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -199,7 +200,7 @@ public class Stage extends Canvas implements ImageObserver {
 
     }
 
-    public void game() {
+    public void game() throws IOException {
 
     }
 
@@ -231,7 +232,7 @@ public class Stage extends Canvas implements ImageObserver {
 
     }
 
-    public void paintHighscoreMenu() {
+    public void paintHighscoreMenu() throws IOException {
 
     }
 

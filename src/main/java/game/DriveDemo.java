@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 
 
 import javax.swing.JFrame;
@@ -221,7 +222,11 @@ public class DriveDemo extends Stage implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e) {
-        keyPressedHandlerLeft.handleInput(e);
+        try {
+            keyPressedHandlerLeft.handleInput(e);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
         if( e.getKeyCode() == KeyEvent.VK_K) {
             Actor.debugCollision = !Actor.debugCollision;
@@ -231,7 +236,11 @@ public class DriveDemo extends Stage implements KeyListener {
     }
 
     public void keyReleased(KeyEvent e) {
-        keyReleasedHandlerLeft.handleInput(e);
+        try {
+            keyReleasedHandlerLeft.handleInput(e);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         //keyReleasedHandlerRight.handleInput(e);
     }
 

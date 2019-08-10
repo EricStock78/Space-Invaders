@@ -7,10 +7,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Random;
+import java.io.*;
+import java.util.*;
 import java.util.Timer;
-import java.util.TimerTask;
 
 
 import javax.swing.*;
@@ -22,9 +21,10 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private static final long serialVersionUID = 1L;
 
+
     private InputHandler keyPressedHandlerLeft;
     private InputHandler keyReleasedHandlerLeft;
-
+    private Properties data = new Properties();
     public long usedTime; //time taken per game step
     public BufferStrategy strategy;     //double buffering strategy
     public int roadHorizontalOffset;
@@ -193,16 +193,16 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
 
-
-    private void checkCollision() {
+    private void checkCollision() throws IOException {
 
 
         for (int i = 0; i < actors.size(); i++) {
 
             if (actors.get(i) instanceof Moose) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    //getFact()
-                     factList = getFact();
+                    saveScore(score);
+
+                    factList = getFact();
                     paintGameOver();
                 }
             }
@@ -228,8 +228,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
 
                     if (car.getCurrentHealth() == 0) {
-                        //getFact()
-                         factList = getFact();
+                        saveScore(score);
+                        factList = getFact();
                         paintGameOver();
                     }
                     //actors.get(i).setMarkedForRemoval(true);
@@ -255,7 +255,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
 
-    public void game() {
+    public void game() throws IOException {
 
         /*************************************************************************************************************
          *                                                      GAME LOOP
@@ -295,7 +295,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                 paintGameOver();
 
                 continue;
-                //break; //TODO: This lets game over screen go to main menu, but when play is pressed it goes back to the game over screen
+                //break; /
             }
             if (super.game) {
                 checkCollision();
@@ -332,7 +332,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 475, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 475, this);
 
-           writeFact();
+        writeFact();
 
         strategy.show();
     }
@@ -430,7 +430,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy.show();
     }
 
-    public void paintHighscoreMenu() {
+    public void paintHighscoreMenu() throws IOException {
         onHighscoreMenu();
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
@@ -438,6 +438,21 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         g.drawImage(ResourceLoader.getInstance().getSprite("highscoreTitle.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
+        int x = 200;
+        // System.out.println(data.toString());
+        System.out.println(getScores().get(2));
+        // TODO: 2019-08-10 find a better way to make the strings for the score
+        String frist = "1st: "+ Integer.toString(getScores().get(2));
+        String second = "2nd: "+ Integer.toString(getScores().get(1));
+        String third = "3rd: "+ Integer.toString(getScores().get(0));
+
+        g.setColor(new Color(10, 255, 14));
+        g.setFont(new Font("BitPotionExt", 0, 50));
+        g.drawString(frist, 200, 250);
+        g.drawString(second, 200, 300);
+        g.drawString(third, 200, 350);
+
+
 
         strategy.show();
     }
@@ -486,52 +501,28 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         }
     }
-    // TODO: 2019-08-10  replace strings with getFact method
+
     public void writeFact() {
         Random randy = new Random();
         Graphics g = strategy.getDrawGraphics();
 
         g.setColor(new Color(11, 33, 64));
         g.setFont(new Font("BitPotionExt", 0, 60));
-        g.drawString("Did You Know?", 376, 240);
+        g.drawString("Did You Know?", 300, 240);
         g.setFont(new Font("BitPotionExt", 0, 32));
-int y =290;
-        // TODO: 2019-08-10 turn into for each loop
-        for (String fact : factList){
-            g.drawString(fact, 282, y);
-            y+=30;
+        int y = 290;
+
+        for (String fact : factList) {
+            g.drawString(fact, 200, y);
+            y += 30;
 
         }
-//
-//        if (i == 0) {
-//            g.drawString("Even in areas with very low moose density,", 282, 290);
-//            g.drawString("moose are still attracted to roadways and", 282, 320);
-//            g.drawString("can pose a hazard to drivers.", 282, 350);
-//        } else if (i == 1) {
-//            g.drawString("Most accidents occur on clear nights and on", 282, 290);
-//            g.drawString("straight road sections. ", 282, 320);
-//            g.drawString("Don't let yourself be distracted.", 282, 350);
-//        } else if (i == 2) {
-//            g.drawString("More than 70% of accidents occur between", 282, 290);
-//            g.drawString("May and October. The most critical", 282, 320);
-//            g.drawString("months are June, July, and August.", 282, 350);
-//            g.drawString("However, moose accidents can occur all year.", 282, 380);
-//        } else if (i == 3) {
-//            g.drawString("More accidents occur on certain sections of", 282, 290);
-//            g.drawString("the highway. These areas are marked with", 282, 320);
-//            g.drawString("moose crossing warning signs.", 282, 350);
-//        } else if (i == 4) {
-//            g.drawString("Moose accidents are estimated to cost more", 282, 290);
-//            g.drawString("than $1 million annually.", 282, 320);
-//        } else if (i == 5) {
-//            g.drawString("Care and attention when driving is your", 282, 290);
-//            g.drawString("best defense against moose-vehicle accidents.", 282, 320);
-//        }
 
         g.setFont(new Font("BitPotionExt", 0, 23));
-        g.drawString("https://www.flr.gov.nl.ca/wildlife/moose_vehicle_awareness.html", 282, 440);
+        g.drawString("https://www.flr.gov.nl.ca/wildlife/moose_vehicle_awareness.html", 200, 440);
     }
-    // TODO: 2019-08-10  create a static fact that will be generated on game over
+
+
     public ArrayList<String> getFact() {
         ArrayList<String> factBuilder = new ArrayList<>();
         Random randy = new Random();
@@ -566,9 +557,12 @@ int y =290;
     }
 
 
-
     public void keyPressed(KeyEvent e) {
-        keyPressedHandlerLeft.handleInput(e);
+        try {
+            keyPressedHandlerLeft.handleInput(e);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
         if (e.getKeyCode() == KeyEvent.VK_K) {
             Actor.debugCollision = !Actor.debugCollision;
@@ -591,7 +585,11 @@ int y =290;
 
 
     public void keyReleased(KeyEvent e) {
-        keyReleasedHandlerLeft.handleInput(e);
+        try {
+            keyReleasedHandlerLeft.handleInput(e);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void keyTyped(KeyEvent e) {
@@ -603,13 +601,60 @@ int y =290;
         car.setY(Stage.HEIGHT / 2 - 128);
 
         for (int i = 1; i < actors.size(); i++) {
-            //   System.out.println("removing" + actors.get(i));
             actors.get(i).setMarkedForRemoval(true);
             score = 0;
         }
     }
 
-    public static void main(String[] args) {
+    public void saveScore(int newScore) throws IOException {
+
+        String file = "highscore.dat";
+        ArrayList<Integer> scoreBored = getScores();
+
+        for (int i=0; i<2;i++){
+            if (newScore>scoreBored.get(i)){
+                scoreBored.remove(0);
+                scoreBored.add(newScore);
+                Collections.sort(scoreBored);
+                break;
+            }
+        }
+        try {
+
+            BufferedWriter output = new BufferedWriter(new FileWriter(file, true));
+            clearTheFile();
+            output.flush();
+            for (int i = 0; i < 3; i++) {
+                output.append(String.valueOf(scoreBored.get(i)));
+                output.newLine();
+            }
+            output.close();
+        } catch (IOException ex1) {
+            System.out.printf("ERROR writing score to file: %s\n", ex1);
+        }
+    }
+    public ArrayList<Integer> getScores() throws IOException {
+        ArrayList<Integer> scoreBored = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader("highscore.dat"));
+        String line = reader.readLine();
+        while (line != null){
+            scoreBored.add( Integer.parseInt(line.trim()));
+            line = reader.readLine();
+        }
+        reader.close();
+        return scoreBored;
+
+    }
+    public static void clearTheFile() throws IOException {
+        FileWriter fwOb = new FileWriter("highscore.dat", false);
+        PrintWriter pwOb = new PrintWriter(fwOb, false);
+        pwOb.flush();
+        pwOb.close();
+        fwOb.close();
+    }
+
+
+    public static void main(String[] args) throws IOException {
         MooseTheGame mooseGame = new MooseTheGame();
         //mooseGame.paintMainMenu();
         mooseGame.game();
