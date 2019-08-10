@@ -14,6 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -323,20 +324,20 @@ public class Invaders extends Stage implements KeyListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		keyPressedHandler.handleInput(e);
-		if( e.getKeyCode() == KeyEvent.VK_0) {
+        keyPressedHandler.handleInput(e);
+        if( e.getKeyCode() == KeyEvent.VK_0) {
 			Actor.debugCollision = !Actor.debugCollision;
 		}
 	}
 
 	public void keyReleased(KeyEvent e) {
-		keyReleasedHandler.handleInput(e);
-	}
+        keyReleasedHandler.handleInput(e);
+    }
 
 	public void keyTyped(KeyEvent e) {
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
       //  DriveDemo demo = new DriveDemo();
        // demo.game();
 

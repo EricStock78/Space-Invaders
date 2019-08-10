@@ -13,6 +13,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -122,13 +123,13 @@ public class RedBoxGame extends Stage implements KeyListener {
         strategy.show();		
     }
     
-    public void keyPressed(KeyEvent e) {	
+    public void keyPressed(KeyEvent e) {
         keyPressedHandler.handleInput(e);
-	}
+    }
 
 	public void keyReleased(KeyEvent e) {
         keyReleasedHandler.handleInput(e);
-	}
+    }
 
 	public void keyTyped(KeyEvent e) {
 	}

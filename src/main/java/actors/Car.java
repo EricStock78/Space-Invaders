@@ -44,7 +44,7 @@ public class Car extends Actor implements KeyboardControllable {
         if (up)
             vy = -actorSpeed;
         if (left)
-            vx = -actorSpeed;
+            vx = -actorSpeed-2;
         if (right)
             vx = actorSpeed;
 

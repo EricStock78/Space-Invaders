@@ -3,6 +3,7 @@ package game;
 import java.awt.Canvas;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,31 +11,31 @@ import actors.Actor;
 
 public class Stage extends Canvas implements ImageObserver {
 
-	private static final long serialVersionUID = 1L;
-	public static final int WIDTH = 1000;
-	public static final int HEIGHT = 600;
-	public static final int DESIRED_FPS = 60; 
+    private static final long serialVersionUID = 1L;
+    public static final int WIDTH = 1000;
+    public static final int HEIGHT = 600;
+    public static final int DESIRED_FPS = 60;
 
-	protected boolean audioOptionsMenu = false;
-	protected boolean controlsOptionsMenu = false;
-	protected boolean customizationMenu = false;
+    protected boolean audioOptionsMenu = false;
+    protected boolean controlsOptionsMenu = false;
+    protected boolean customizationMenu = false;
     protected boolean game = false;
-	protected boolean gameWon = false;
-	protected boolean gameOver = false;
-	protected boolean highscoreMenu = false;
-	protected boolean mainMenu = false;
+    protected boolean gameWon = false;
+    protected boolean gameOver = false;
+    protected boolean highscoreMenu = false;
+    protected boolean mainMenu = false;
     protected boolean optionsMenu = false;
-	protected boolean pauseMenu = false;
-	protected boolean videoOptionsMenu = false;
+    protected boolean pauseMenu = false;
+    protected boolean videoOptionsMenu = false;
 
 
-	public List<Actor> actors = new ArrayList<Actor>();	
-	
-	public Stage() {
-	}
-	
-	public void endGame() {
-		gameOver = true;
+    public List<Actor> actors = new ArrayList<Actor>();
+
+    public Stage() {
+    }
+
+    public void endGame() {
+        gameOver = true;
         mainMenu = true;
         pauseMenu = false;
         optionsMenu = false;
@@ -44,15 +45,15 @@ public class Stage extends Canvas implements ImageObserver {
         controlsOptionsMenu = false;
         videoOptionsMenu = false;
         highscoreMenu = false;
-	}
-	
-	public boolean isGameOver() {
-		return gameOver;
-	}
+    }
 
-	public void onMainMenu() {
-		mainMenu = true;
-		gameOver = false;
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void onMainMenu() {
+        mainMenu = true;
+        gameOver = false;
         pauseMenu = false;
         optionsMenu = false;
         game = false;
@@ -61,10 +62,10 @@ public class Stage extends Canvas implements ImageObserver {
         controlsOptionsMenu = false;
         videoOptionsMenu = false;
         highscoreMenu = false;
-	}
+    }
 
-	public void onOptionsMenu() {
-		optionsMenu = true;
+    public void onOptionsMenu() {
+        optionsMenu = true;
         gameOver = false;
         mainMenu = false;
         pauseMenu = false;
@@ -74,10 +75,10 @@ public class Stage extends Canvas implements ImageObserver {
         controlsOptionsMenu = false;
         videoOptionsMenu = false;
         highscoreMenu = false;
-	}
+    }
 
-	public void inGame() {
-	    game = true;
+    public void inGame() {
+        game = true;
         optionsMenu = false;
         gameOver = false;
         mainMenu = false;
@@ -91,7 +92,7 @@ public class Stage extends Canvas implements ImageObserver {
     }
 
     public void onPauseMenu() {
-	    pauseMenu = true;
+        pauseMenu = true;
         optionsMenu = false;
         gameOver = false;
         mainMenu = false;
@@ -104,7 +105,7 @@ public class Stage extends Canvas implements ImageObserver {
     }
 
     public void onCustomizationMenu() {
-	    customizationMenu = true;
+        customizationMenu = true;
         pauseMenu = false;
         optionsMenu = false;
         gameOver = false;
@@ -168,25 +169,25 @@ public class Stage extends Canvas implements ImageObserver {
         game = false;
         videoOptionsMenu = false;
     }
-	
-	public boolean imageUpdate(Image img, int infoflags, int x, int y,
-			int width, int height) {
-		return false;
-	}
-        
+
+    public boolean imageUpdate(Image img, int infoflags, int x, int y,
+                               int width, int height) {
+        return false;
+    }
+
     public void initWorld() {
 
     }
 
-    public void game() {
+    public void game() throws IOException {
 
     }
 
     public void paintOptionsMenu() {
 
-	}
+    }
 
-	public void paintPauseMenu() {
+    public void paintPauseMenu() {
 
     }
 
@@ -210,12 +211,12 @@ public class Stage extends Canvas implements ImageObserver {
 
     }
 
-    public void paintHighscoreMenu() {
+    public void paintHighscoreMenu() throws IOException {
 
     }
-    
+
     public void resetGame() {
-   
+
     }
 
 
