@@ -14,6 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -185,13 +186,29 @@ public class PongGame extends Stage implements KeyListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		keyPressedHandlerLeft.handleInput(e);
-                keyPressedHandlerRight.handleInput(e);
+		try {
+			keyPressedHandlerLeft.handleInput(e);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		try {
+			keyPressedHandlerRight.handleInput(e);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
-		keyReleasedHandlerLeft.handleInput(e);
-                keyReleasedHandlerRight.handleInput(e);
+		try {
+			keyReleasedHandlerLeft.handleInput(e);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		try {
+			keyReleasedHandlerRight.handleInput(e);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public void keyTyped(KeyEvent e) {

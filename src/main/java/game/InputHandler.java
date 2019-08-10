@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import actors.Player;
 
@@ -24,7 +25,7 @@ public class InputHandler {
         this.player = player;
     }
 
-    public void handleInput(KeyEvent event) {
+    public void handleInput(KeyEvent event) throws IOException {
         if (action == Action.PRESS) {
             if (KeyEvent.VK_ENTER == event.getKeyCode()) {
                 if (stage.gameOver) {
