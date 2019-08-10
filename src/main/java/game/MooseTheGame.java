@@ -16,15 +16,28 @@ import javax.swing.*;
 
 import actors.*;
 
-
 public class MooseTheGame extends Stage implements KeyListener {
+
+    public enum eGameState {
+        GS_Playing,
+        GS_Paused,
+        GS_MainMenu,
+        GS_GameOver,
+        GS_Options,
+        GS_AudioOptions,
+        GS_Customizations,
+        GS_HighScore,
+        GS_Controls,
+        GS_VideoOptions
+    }
+
 
     private static final long serialVersionUID = 1L;
 
-
     private InputHandler keyPressedHandlerLeft;
     private InputHandler keyReleasedHandlerLeft;
-    private Properties data = new Properties();
+    private ArrayList<String> factList;
+
     public long usedTime; //time taken per game step
     public BufferStrategy strategy;     //double buffering strategy
     public int roadHorizontalOffset;
@@ -33,7 +46,8 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Car car;
     private int score;
     private boolean hitBlood = false;
-    ArrayList<String> factList;
+
+    private eGameState gameState;
 
     public MooseTheGame() {
         //init the UI
@@ -79,10 +93,12 @@ public class MooseTheGame extends Stage implements KeyListener {
     public void initWorld() {
         car = new Car(this);
 
-
         actors.add(car);
 
-
+        keyPressedHandlerLeft = new InputHandler(this, car);
+        keyPressedHandlerLeft.action = InputHandler.Action.PRESS;
+        keyReleasedHandlerLeft = new InputHandler(this, car);
+        keyReleasedHandlerLeft.action = InputHandler.Action.RELSEASE;
     }
 
     public void paintWorld() {
@@ -114,6 +130,13 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy.show();
     }
 
+    public void paintFPS(Graphics g) {
+        g.setColor(Color.RED);
+        if (usedTime > 0)
+            g.drawString(String.valueOf(1000 / usedTime) + " fps", 0, Stage.HEIGHT - 50);
+        else
+            g.drawString("--- fps", 0, Stage.HEIGHT - 50);
+    }
 
     public void paintScore(Graphics g, int score) {
         g.setColor(Color.RED);
@@ -192,7 +215,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
     }
 
-
     private void checkCollision() throws IOException {
 
 
@@ -200,10 +222,9 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             if (actors.get(i) instanceof Moose) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    saveScore(score);
-
                     factList = getFact();
-                    paintGameOver();
+                    saveScore(score);
+                    gameState = eGameState.GS_GameOver;
                 }
             }
 
@@ -228,11 +249,12 @@ public class MooseTheGame extends Stage implements KeyListener {
 
 
                     if (car.getCurrentHealth() == 0) {
-                        saveScore(score);
                         factList = getFact();
-                        paintGameOver();
+                        saveScore(score);
+                        gameState = eGameState.GS_GameOver;
+
                     }
-                    //actors.get(i).setMarkedForRemoval(true);
+
                 }
             }
 
@@ -260,18 +282,19 @@ public class MooseTheGame extends Stage implements KeyListener {
         /*************************************************************************************************************
          *                                                      GAME LOOP
          **************************************************************************************************************/
-
-        // TODO: 2019-08-09 find a way to start on main menu
-        // paintMainMenu();
         inGame();
-        //  onMainMenu();
         usedTime = 0;
         trackScore();
+        gameState = eGameState.GS_MainMenu;
 
         while (isVisible()) {
-
             long startTime = System.currentTimeMillis();
+
             usedTime = System.currentTimeMillis() - startTime;
+
+            //calculate sleep time
+            if (usedTime == 0) usedTime = 1;
+
             int timeDiff = 1000 / DESIRED_FPS - (int) (usedTime);
             if (timeDiff > 0) {
                 try {
@@ -281,42 +304,41 @@ public class MooseTheGame extends Stage implements KeyListener {
                 }
             }
 
+            if (gameState == eGameState.GS_Playing) {
 
-            //calculate sleep time
-            if (usedTime == 0) usedTime = 1;
-// TODO: 2019-08-10 main menu breaks key listener and speeds up the road
-//            if (super.mainMenu) {
-//                paintMainMenu();
-//                clearActors();
-//            }
-            if (super.gameOver) {
-                car.gainHealth(100);
-                clearActors();
-                paintGameOver();
-
-                continue;
-                //break; /
-            }
-            if (super.game) {
                 checkCollision();
                 actorGenerator();
+                updateWorld();
                 paintWorld();
+
+            } else if (gameState == eGameState.GS_MainMenu) {
+                paintMainMenu();
+            } else if (gameState == eGameState.GS_GameOver) {
+
+                paintGameOver();
+
+            } else if (gameState == eGameState.GS_Options) {
+                paintOptionsMenu();
+            } else if (gameState == eGameState.GS_VideoOptions) {
+                paintVideoOptionsMenu();
+            } else if (gameState == eGameState.GS_Paused) {
+                paintPauseMenu();
+            } else if (gameState == eGameState.GS_Customizations) {
+                paintCustomizationMenu();
+            } else if (gameState == eGameState.GS_AudioOptions) {
+                paintAudioOptionsMenu();
+            } else if (gameState == eGameState.GS_Controls) {
+                paintControlsOptionsMenu();
+            } else if (gameState == eGameState.GS_HighScore) {
+                paintHighscoreMenu();
             }
-            updateWorld();
+
             usedTime = System.currentTimeMillis() - startTime;
         }
-        //paintMainMenu();
-        //}
     }
 
-    /**
-     * paint methods
-     */
-
     public void paintGameOver() {
-
         endGame();
-
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -336,7 +358,6 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         strategy.show();
     }
-
 
     public void paintMainMenu() {
         onMainMenu();
@@ -438,9 +459,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         g.drawImage(ResourceLoader.getInstance().getSprite("highscoreTitle.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
-        int x = 200;
-        // System.out.println(data.toString());
-        System.out.println(getScores().get(2));
+
+
         // TODO: 2019-08-10 find a better way to make the strings for the score
         String frist = "1st: "+ Integer.toString(getScores().get(2));
         String second = "2nd: "+ Integer.toString(getScores().get(1));
@@ -451,9 +471,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.drawString(frist, 200, 250);
         g.drawString(second, 200, 300);
         g.drawString(third, 200, 350);
-
-
-
         strategy.show();
     }
 
@@ -498,7 +515,6 @@ public class MooseTheGame extends Stage implements KeyListener {
                 PotHole potHole = new PotHole(this);
                 actors.add(potHole);
                 break;
-
         }
     }
 
@@ -508,18 +524,18 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         g.setColor(new Color(11, 33, 64));
         g.setFont(new Font("BitPotionExt", 0, 60));
-        g.drawString("Did You Know?", 300, 240);
+        g.drawString("Did You Know?", 350, 240);
         g.setFont(new Font("BitPotionExt", 0, 32));
         int y = 290;
 
         for (String fact : factList) {
-            g.drawString(fact, 200, y);
+            g.drawString(fact, 250, y);
             y += 30;
 
         }
 
         g.setFont(new Font("BitPotionExt", 0, 23));
-        g.drawString("https://www.flr.gov.nl.ca/wildlife/moose_vehicle_awareness.html", 200, 440);
+        g.drawString("https://www.flr.gov.nl.ca/wildlife/moose_vehicle_awareness.html", 250, 440);
     }
 
 
@@ -557,6 +573,13 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
 
+    public void resetGame() {
+        gameState = eGameState.GS_Playing;
+        score = 0;
+        actors.clear();
+        initWorld();
+    }
+
     public void keyPressed(KeyEvent e) {
         try {
             keyPressedHandlerLeft.handleInput(e);
@@ -567,22 +590,82 @@ public class MooseTheGame extends Stage implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_K) {
             Actor.debugCollision = !Actor.debugCollision;
         }
-        if (e.getKeyCode() == KeyEvent.VK_R) {
-            inGame();
 
-            if (e.getKeyCode() == KeyEvent.VK_M) {
-
-                onMainMenu();
+        if (e.getKeyChar() == 'R' || e.getKeyChar() == 'r') {
+            if (gameState == eGameState.GS_GameOver) {
+                resetGame();
             }
-            if (e.getKeyCode() == KeyEvent.VK_P) {
-                if (super.mainMenu) {
 
-                    inGame();
-                }
+            //else if (stage.game) {
+            //   stage.paintPauseMenu();
+            //}
+        } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (gameState == eGameState.GS_Playing) {
+                gameState = eGameState.GS_Paused;
+            } else if (gameState == eGameState.GS_Paused) {
+                gameState = eGameState.GS_Playing;
+            }
+        } else if (e.getKeyChar() == 'A' || e.getKeyChar() == 'a') {
+            if (gameState == eGameState.GS_Options) {
+                gameState = eGameState.GS_AudioOptions;
+            }
+        } else if (e.getKeyChar() == 'B' || e.getKeyChar() == 'b') {
+            if (gameState == eGameState.GS_Options || gameState == eGameState.GS_Customizations || gameState == eGameState.GS_HighScore) {
+                gameState = eGameState.GS_MainMenu;
+            } else if (gameState == eGameState.GS_Controls || gameState == eGameState.GS_AudioOptions
+                    || gameState == eGameState.GS_VideoOptions) {
+                gameState = eGameState.GS_Options;
+            }
+        } // End B
+
+        else if (e.getKeyChar() == 'C' || e.getKeyChar() == 'c') {
+            if (gameState == eGameState.GS_MainMenu) {
+                gameState = eGameState.GS_Customizations;
+            } else if (gameState == eGameState.GS_Options) {
+                gameState = eGameState.GS_Customizations;
+            }
+        } // End C
+
+        else if (e.getKeyChar() == 'H' || e.getKeyChar() == 'h') {
+            if (gameState == eGameState.GS_MainMenu) {
+                gameState = eGameState.GS_HighScore;
+            }
+        } // End H
+
+
+        else if (e.getKeyChar() == 'M' || e.getKeyChar() == 'm') {
+            if (gameState == eGameState.GS_GameOver) {
+                gameState = eGameState.GS_MainMenu;
+            }
+        } // End M
+
+        else if (e.getKeyChar() == 'O' || e.getKeyChar() == 'o') {
+            if (gameState == eGameState.GS_MainMenu) {
+                gameState = eGameState.GS_Options;
+            }
+        } // End O
+
+        else if (e.getKeyChar() == 'P' || e.getKeyChar() == 'p') {
+            // TODO: Game does not init properly when started this way ex. no controls, cant close window
+            if (gameState == eGameState.GS_MainMenu) {
+                gameState = eGameState.GS_Playing;
+                resetGame();
+            }
+        } // End P
+
+        else if (e.getKeyChar() == 'Q' || e.getKeyChar() == 'q') {
+            if (gameState == eGameState.GS_MainMenu || gameState == eGameState.GS_Paused
+                    || gameState == eGameState.GS_GameOver) {
+                System.exit(0);
+            }
+        } // End Q
+
+        else if (e.getKeyChar() == 'V' || e.getKeyChar() == 'v') {
+            if (gameState == eGameState.GS_Options) {
+                gameState = eGameState.GS_VideoOptions;
             }
         }
     }
-
 
     public void keyReleased(KeyEvent e) {
         try {
@@ -595,24 +678,13 @@ public class MooseTheGame extends Stage implements KeyListener {
     public void keyTyped(KeyEvent e) {
     }
 
-
-    public void clearActors() {
-        car.setX(Stage.WIDTH / 2 - 128);
-        car.setY(Stage.HEIGHT / 2 - 128);
-
-        for (int i = 1; i < actors.size(); i++) {
-            actors.get(i).setMarkedForRemoval(true);
-            score = 0;
-        }
-    }
-
     public void saveScore(int newScore) throws IOException {
 
         String file = "highscore.dat";
         ArrayList<Integer> scoreBored = getScores();
 
-        for (int i=0; i<2;i++){
-            if (newScore>scoreBored.get(i)){
+        for (int i = 0; i < 2; i++) {
+            if (newScore > scoreBored.get(i)) {
                 scoreBored.remove(0);
                 scoreBored.add(newScore);
                 Collections.sort(scoreBored);
@@ -633,18 +705,20 @@ public class MooseTheGame extends Stage implements KeyListener {
             System.out.printf("ERROR writing score to file: %s\n", ex1);
         }
     }
+
     public ArrayList<Integer> getScores() throws IOException {
         ArrayList<Integer> scoreBored = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader("highscore.dat"));
         String line = reader.readLine();
-        while (line != null){
-            scoreBored.add( Integer.parseInt(line.trim()));
+        while (line != null) {
+            scoreBored.add(Integer.parseInt(line.trim()));
             line = reader.readLine();
         }
         reader.close();
         return scoreBored;
 
     }
+
     public static void clearTheFile() throws IOException {
         FileWriter fwOb = new FileWriter("highscore.dat", false);
         PrintWriter pwOb = new PrintWriter(fwOb, false);
@@ -652,7 +726,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         pwOb.close();
         fwOb.close();
     }
-
 
     public static void main(String[] args) throws IOException {
         MooseTheGame mooseGame = new MooseTheGame();
