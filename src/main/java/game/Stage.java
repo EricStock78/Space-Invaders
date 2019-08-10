@@ -32,8 +32,28 @@ public class Stage extends Canvas implements ImageObserver {
 	
 	public Stage() {
 	}
-	
-	public void endGame() {
+
+
+    /**
+     * debugging method to check the state of the game
+     */
+	public void printState(){
+        System.out.println("state");
+        System.out.println("audioOptionsMenu "+audioOptionsMenu+"\n"+
+        "controlsOptionsMenu "+controlsOptionsMenu+"\n"+
+        "customizationMenu "+customizationMenu +"\n"+
+        "game" +game+"\n"+
+        "gameWon "+gameWon +"\n"+
+        "gameOver "+gameOver +"\n"+
+        "highscoreMenu "+highscoreMenu+"\n"+
+        "mainMenu "+mainMenu +"\n"+
+        "optionsMenu "+optionsMenu +"\n"+
+        "pauseMenu "+pauseMenu +"\n"+
+        "videoOptionsMenu "+videoOptionsMenu );
+    }
+
+
+    public void endGame() {
 		gameOver = true;
         mainMenu = true;
         pauseMenu = false;

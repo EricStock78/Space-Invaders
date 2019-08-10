@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,6 +16,7 @@ import java.util.TimerTask;
 import javax.swing.*;
 
 import actors.*;
+
 
 public class MooseTheGame extends Stage implements KeyListener {
 
@@ -76,7 +78,10 @@ public class MooseTheGame extends Stage implements KeyListener {
     public void initWorld() {
         car = new Car(this);
 
+
         actors.add(car);
+
+
     }
 
     public void paintWorld() {
@@ -108,13 +113,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy.show();
     }
 
-    public void paintFPS(Graphics g) {
-        g.setColor(Color.RED);
-        if (usedTime > 0)
-            g.drawString(String.valueOf(1000 / usedTime) + " fps", 0, Stage.HEIGHT - 50);
-        else
-            g.drawString("--- fps", 0, Stage.HEIGHT - 50);
-    }
 
     public void paintScore(Graphics g, int score) {
         g.setColor(Color.RED);
@@ -195,12 +193,12 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private void checkCollision() {
 
-// TODO:  fix removal of coffee
-// TODO:  potholes do not disapear when you hit them and nether should ours
+
         for (int i = 0; i < actors.size(); i++) {
 
             if (actors.get(i) instanceof Moose) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    //getFact()
                     paintGameOver();
                 }
             }
@@ -222,23 +220,25 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (actors.get(i) instanceof PotHole) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
                     car.loseHealth(1);
-                   // System.out.println("");
+                    // System.out.println("");
 
 
                     if (car.getCurrentHealth() == 0) {
+                        //getFact()
                         paintGameOver();
                     }
                     //actors.get(i).setMarkedForRemoval(true);
-                }}
+                }
+            }
 
-                if (actors.get(i) instanceof Coffee) {
-                    if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                        score += 5;
-                        actors.get(i).setMarkedForRemoval(true);
-                    }
+            if (actors.get(i) instanceof Coffee) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    score += 5;
+                    actors.get(i).setMarkedForRemoval(true);
                 }
             }
         }
+    }
 
 
     public void loopSound(final String name) {
@@ -255,24 +255,18 @@ public class MooseTheGame extends Stage implements KeyListener {
         /*************************************************************************************************************
          *                                                      GAME LOOP
          **************************************************************************************************************/
+
+        // TODO: 2019-08-09 find a way to start on main menu
+        // paintMainMenu();
         inGame();
+        //  onMainMenu();
         usedTime = 0;
         trackScore();
 
         while (isVisible()) {
+
             long startTime = System.currentTimeMillis();
-            checkCollision();
-
             usedTime = System.currentTimeMillis() - startTime;
-
-            //calculate sleep time
-            if (usedTime == 0) usedTime = 1;
-            if (super.gameOver) {
-                paintGameOver();
-                //continue;
-                System.out.println("i am game overing");
-                break; //TODO: This lets game over screen go to main menu, but when play is pressed it goes back to the game over screen
-            }
             int timeDiff = 1000 / DESIRED_FPS - (int) (usedTime);
             if (timeDiff > 0) {
                 try {
@@ -282,16 +276,42 @@ public class MooseTheGame extends Stage implements KeyListener {
                 }
             }
 
-            actorGenerator();
-            updateWorld();
-            paintWorld();
 
+            //calculate sleep time
+            if (usedTime == 0) usedTime = 1;
+// TODO: 2019-08-10 main menu breaks key listener and speeds up the road
+//            if (super.mainMenu) {
+//                paintMainMenu();
+//                clearActors();
+//            }
+            if (super.gameOver) {
+                car.gainHealth(100);
+                clearActors();
+                paintGameOver();
+
+                continue;
+                //break; //TODO: This lets game over screen go to main menu, but when play is pressed it goes back to the game over screen
+            }
+            if (super.game) {
+                checkCollision();
+                actorGenerator();
+                paintWorld();
+            }
+            updateWorld();
             usedTime = System.currentTimeMillis() - startTime;
         }
+        //paintMainMenu();
+        //}
     }
 
+    /**
+     * paint methods
+     */
+
     public void paintGameOver() {
+
         endGame();
+
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -307,10 +327,11 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 475, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 475, this);
 
-        //writeFact();
+        //    writeFact();
 
         strategy.show();
     }
+
 
     public void paintMainMenu() {
         onMainMenu();
@@ -457,9 +478,11 @@ public class MooseTheGame extends Stage implements KeyListener {
                 PotHole potHole = new PotHole(this);
                 actors.add(potHole);
                 break;
+
         }
     }
 
+    // TODO: 2019-08-10  replace strings with getFact method
     public void writeFact() {
         Random randy = new Random();
         Graphics g = strategy.getDrawGraphics();
@@ -499,6 +522,10 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.setFont(new Font("BitPotionExt", 0, 23));
         g.drawString("https://www.flr.gov.nl.ca/wildlife/moose_vehicle_awareness.html", 282, 440);
     }
+    // TODO: 2019-08-10  create a static fact that will be generated on game over
+    //public String getFact() {
+    // }
+
 
     public void keyPressed(KeyEvent e) {
         keyPressedHandlerLeft.handleInput(e);
@@ -506,13 +533,40 @@ public class MooseTheGame extends Stage implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_K) {
             Actor.debugCollision = !Actor.debugCollision;
         }
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+            inGame();
+
+            if (e.getKeyCode() == KeyEvent.VK_M) {
+
+                onMainMenu();
+            }
+            if (e.getKeyCode() == KeyEvent.VK_P) {
+                if (super.mainMenu) {
+
+                    inGame();
+                }
+            }
+        }
     }
+
 
     public void keyReleased(KeyEvent e) {
         keyReleasedHandlerLeft.handleInput(e);
     }
 
     public void keyTyped(KeyEvent e) {
+    }
+
+
+    public void clearActors() {
+        car.setX(Stage.WIDTH / 2 - 128);
+        car.setY(Stage.HEIGHT / 2 - 128);
+
+        for (int i = 1; i < actors.size(); i++) {
+            //   System.out.println("removing" + actors.get(i));
+            actors.get(i).setMarkedForRemoval(true);
+            score = 0;
+        }
     }
 
     public static void main(String[] args) {
