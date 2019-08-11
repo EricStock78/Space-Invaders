@@ -88,7 +88,6 @@ public class Stage extends Canvas implements ImageObserver {
         controlsOptionsMenu = false;
         videoOptionsMenu = false;
         highscoreMenu = false;
-
     }
 
     public void onPauseMenu() {
