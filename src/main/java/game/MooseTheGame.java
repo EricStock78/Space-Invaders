@@ -51,6 +51,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     private int score;
     private boolean hitBlood = false;
     private boolean hitTire = false;
+    private boolean isPaused = false;
 
     private eGameState gameState;
 
@@ -95,6 +96,68 @@ public class MooseTheGame extends Stage implements KeyListener {
         keyReleasedHandlerLeft.action = InputHandler.Action.RELSEASE;
     }
 
+    public void game() throws IOException {
+        /*************************************************************************************************************
+         *                                                      GAME LOOP
+         **************************************************************************************************************/
+        inGame();
+        usedTime = 0;
+        trackScore();
+        gameState = eGameState.GS_MainMenu;
+
+        while (isVisible()) {
+                if (sound) {
+                    loopSound("music.wav");
+                }
+                long startTime = System.currentTimeMillis();
+
+                usedTime = System.currentTimeMillis() - startTime;
+
+                //calculate sleep time
+                if (usedTime == 0) usedTime = 1;
+
+                int timeDiff = 1000 / DESIRED_FPS - (int) (usedTime);
+
+                if (timeDiff > 0) {
+                    try {
+                        Thread.sleep(timeDiff);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (gameState == eGameState.GS_Playing) {
+                   // while (!isPaused) {
+                        checkCollision();
+                        actorGenerator();
+                        updateWorld();
+                        paintWorld();
+                    //}
+                } else if (gameState == eGameState.GS_MainMenu) {
+                    paintMainMenu();
+                } else if (gameState == eGameState.GS_GameOver) {
+                    paintGameOver();
+
+                } else if (gameState == eGameState.GS_Options) {
+                    paintOptionsMenu();
+                } else if (gameState == eGameState.GS_VideoOptions) {
+                    paintVideoOptionsMenu();
+                } else if (gameState == eGameState.GS_Paused) {
+                    paintPauseMenu();
+                } else if (gameState == eGameState.GS_Customizations) {
+                    paintCustomizationMenu();
+                } else if (gameState == eGameState.GS_AudioOptions) {
+                    paintAudioOptionsMenu();
+                } else if (gameState == eGameState.GS_Controls) {
+                    paintControlsOptionsMenu();
+                } else if (gameState == eGameState.GS_HighScore) {
+                    paintHighscoreMenu();
+                }
+
+                usedTime = System.currentTimeMillis() - startTime;
+            }
+        }
+
     public void initWorld() {
 
         car = new Car(this,2);
@@ -105,6 +168,92 @@ public class MooseTheGame extends Stage implements KeyListener {
         keyPressedHandlerLeft.action = InputHandler.Action.PRESS;
         keyReleasedHandlerLeft = new InputHandler(this, car);
         keyReleasedHandlerLeft.action = InputHandler.Action.RELSEASE;
+    }
+
+    public void updateWorld() {
+
+        roadHorizontalOffset += 10;
+        roadHorizontalOffset %= Stage.WIDTH;
+
+        for (int i = 0; i < actors.size(); i++) {
+            //System.out.println(actors.get(i).toString());
+            if (actors.get(i).isMarkedForRemoval()) {
+                actors.remove(i);
+                i--;
+            }
+
+            actors.get(i).update();
+        }
+    }
+
+    private void checkCollision() throws IOException {
+
+
+        for (int i = 0; i < actors.size(); i++) {
+
+            if (actors.get(i) instanceof Moose) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    factList = getFact();
+                    saveScore(score);
+                    gameState = eGameState.GS_GameOver;
+                }
+            }
+
+            if (actors.get(i) instanceof Timbit) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    car.gainHealth(15);
+                    actors.get(i).setMarkedForRemoval(true);
+                }
+            }
+
+            if (actors.get(i) instanceof TigerBlood) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    setTigerBlood();
+                    actors.get(i).setMarkedForRemoval(true);
+                }
+            }
+
+            if (actors.get(i) instanceof PotHole) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    if (hitTire) {
+                        continue;
+                    }else {
+                        car.loseHealth(1);
+                    }
+
+
+                    if (car.getCurrentHealth() == 0) {
+                        factList = getFact();
+                        saveScore(score);
+                        gameState = eGameState.GS_GameOver;
+
+                    }
+
+                }
+            }
+
+            if (actors.get(i) instanceof Tire) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    setTire();
+                    actors.get(i).setMarkedForRemoval(true);
+                }
+            }
+
+            if (actors.get(i) instanceof Coffee) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    score += 5;
+                    actors.get(i).setMarkedForRemoval(true);
+                }
+            }
+        }
+    }
+
+    public void loopSound(final String name) {
+        new Thread(new Runnable() {
+            public void run() {
+                ResourceLoader.getInstance().getSound(name).loop();
+            }
+        }).start();
     }
 
     public void paintWorld() {
@@ -223,156 +372,6 @@ public class MooseTheGame extends Stage implements KeyListener {
     public void paint(Graphics g) {
     }
 
-    public void updateWorld() {
-
-        roadHorizontalOffset += 10;
-        roadHorizontalOffset %= Stage.WIDTH;
-
-        for (int i = 0; i < actors.size(); i++) {
-            //System.out.println(actors.get(i).toString());
-            if (actors.get(i).isMarkedForRemoval()) {
-                actors.remove(i);
-                i--;
-            }
-
-            actors.get(i).update();
-        }
-    }
-
-    private void checkCollision() throws IOException {
-
-
-        for (int i = 0; i < actors.size(); i++) {
-
-            if (actors.get(i) instanceof Moose) {
-                if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    factList = getFact();
-                    saveScore(score);
-                    gameState = eGameState.GS_GameOver;
-                }
-            }
-
-            if (actors.get(i) instanceof Timbit) {
-                if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    car.gainHealth(15);
-                    actors.get(i).setMarkedForRemoval(true);
-                }
-            }
-
-            if (actors.get(i) instanceof TigerBlood) {
-                if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    setTigerBlood();
-                    actors.get(i).setMarkedForRemoval(true);
-                }
-            }
-
-            if (actors.get(i) instanceof PotHole) {
-                if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    if (hitTire) {
-                        continue;
-                    }else {
-                        car.loseHealth(1);
-                    }
-
-
-                    if (car.getCurrentHealth() == 0) {
-                        factList = getFact();
-                        saveScore(score);
-                        gameState = eGameState.GS_GameOver;
-
-                    }
-
-                }
-            }
-
-            if (actors.get(i) instanceof Tire) {
-                if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    setTire();
-                    actors.get(i).setMarkedForRemoval(true);
-                }
-            }
-
-            if (actors.get(i) instanceof Coffee) {
-                if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    score += 5;
-                    actors.get(i).setMarkedForRemoval(true);
-                }
-            }
-        }
-    }
-
-
-    public void loopSound(final String name) {
-        new Thread(new Runnable() {
-            public void run() {
-                ResourceLoader.getInstance().getSound(name).loop();
-            }
-        }).start();
-    }
-
-
-    public void game() throws IOException {
-
-        /*************************************************************************************************************
-         *                                                      GAME LOOP
-         **************************************************************************************************************/
-        inGame();
-        usedTime = 0;
-        trackScore();
-        gameState = eGameState.GS_MainMenu;
-
-
-        while (isVisible()) {
-            if (sound){ loopSound("music.wav");}
-            long startTime = System.currentTimeMillis();
-
-            usedTime = System.currentTimeMillis() - startTime;
-
-            //calculate sleep time
-            if (usedTime == 0) usedTime = 1;
-
-            int timeDiff = 1000 / DESIRED_FPS - (int) (usedTime);
-            if (timeDiff > 0) {
-                try {
-                    Thread.sleep(timeDiff);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (gameState == eGameState.GS_Playing) {
-
-                checkCollision();
-                actorGenerator();
-                updateWorld();
-                paintWorld();
-
-            } else if (gameState == eGameState.GS_MainMenu) {
-                paintMainMenu();
-            } else if (gameState == eGameState.GS_GameOver) {
-
-                paintGameOver();
-
-            } else if (gameState == eGameState.GS_Options) {
-                paintOptionsMenu();
-            } else if (gameState == eGameState.GS_VideoOptions) {
-                paintVideoOptionsMenu();
-            } else if (gameState == eGameState.GS_Paused) {
-                paintPauseMenu();
-            } else if (gameState == eGameState.GS_Customizations) {
-                paintCustomizationMenu();
-            } else if (gameState == eGameState.GS_AudioOptions) {
-                paintAudioOptionsMenu();
-            } else if (gameState == eGameState.GS_Controls) {
-                paintControlsOptionsMenu();
-            } else if (gameState == eGameState.GS_HighScore) {
-                paintHighscoreMenu();
-            }
-
-            usedTime = System.currentTimeMillis() - startTime;
-        }
-    }
-
     public void paintGameOver() {
         endGame();
         Graphics g = strategy.getDrawGraphics();
@@ -424,6 +423,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     public void paintPauseMenu() {
         onPauseMenu();
+        isPaused = true;
+
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -542,9 +543,10 @@ public class MooseTheGame extends Stage implements KeyListener {
             picker = 3;
         } else if (randNum > 400 && randNum < 415) {
             picker = 4;
-        } else if (randNum > 415 && randNum < 400) {
+        } else if (randNum > 415 && randNum < 430) {
             picker = 6;
         }
+
         switch (picker) {
             case 1:
                 Moose moose = new Moose(this);
@@ -647,10 +649,6 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (gameState == eGameState.GS_Playing) {
                 gameState = eGameState.GS_Paused;
             }
-
-            else if (gameState == eGameState.GS_Paused) {
-                gameState = eGameState.GS_Playing;
-            }
         }
 
         else if (e.getKeyChar() == 'A' || e.getKeyChar() == 'a') {
@@ -723,6 +721,11 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (gameState == eGameState.GS_GameOver) {
                 resetGame();
             }
+
+            else if (gameState == eGameState.GS_Paused) {
+                isPaused = false;
+                gameState = eGameState.GS_Playing;
+            }
         } // End R
 
 
@@ -755,7 +758,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
 
         try {
-
             BufferedWriter output = new BufferedWriter(new FileWriter(file, true));
             clearTheFile();
             output.flush();
@@ -764,7 +766,9 @@ public class MooseTheGame extends Stage implements KeyListener {
                 output.newLine();
             }
             output.close();
-        } catch (IOException ex1) {
+        }
+
+        catch (IOException ex1) {
             System.out.printf("ERROR writing score to file: %s\n", ex1);
         }
     }
@@ -773,13 +777,14 @@ public class MooseTheGame extends Stage implements KeyListener {
         ArrayList<Integer> scoreBored = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader("highscore.dat"));
         String line = reader.readLine();
+
         while (line != null) {
             scoreBored.add(Integer.parseInt(line.trim()));
             line = reader.readLine();
         }
+
         reader.close();
         return scoreBored;
-
     }
 
     public static void clearTheFile() throws IOException {
