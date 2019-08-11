@@ -8,7 +8,7 @@ public class PotHole  extends Actor {
     private Random randy = new Random();
 
     public PotHole(Stage canvas) {
-        super(canvas, 80, 80, 80, 80);
+        super(canvas, 80, 80, 70, 70);
 
         vx = -10;
 

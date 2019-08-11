@@ -197,7 +197,7 @@ public class DriveDemo extends Stage implements KeyListener {
 
 
     public void game() {
-        //loopSound("music.wav");
+        loopSound("music.wav");
         usedTime= 0;
         while(isVisible()) {
             long startTime = System.currentTimeMillis();
