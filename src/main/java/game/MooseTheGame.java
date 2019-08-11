@@ -276,6 +276,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         paintScore(g, score);
         drawHealthBar(car.getCurrentHealth());
+        drawPowerUps();
 
 
         //swap buffer
@@ -304,7 +305,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                 @Override
                 public void run() {
                     if (isPaused) { }
-                    
+
                     else if (hitBlood) {
                         score += 20;
                     } else {
@@ -334,12 +335,12 @@ public class MooseTheGame extends Stage implements KeyListener {
     public void drawPowerUps() {
         Graphics g = strategy.getDrawGraphics();
 
-        while (hitBlood) {
-            g.drawImage(ResourceLoader.getInstance().getSprite("tigerBloodsm"), 20, 500, this);
+        if (hitBlood) {
+            g.drawImage(ResourceLoader.getInstance().getSprite("tigerBloodsm.png"), 35, 497, this);
         }
 
-        while (hitTire) {
-
+        if (hitTire) {
+            g.drawImage(ResourceLoader.getInstance().getSprite("tiresm.png"), 65, 497, this);
         }
     }
 
