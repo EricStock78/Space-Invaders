@@ -310,315 +310,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy.show();
     }
 
-    public void paintFPS(Graphics g) {
-        g.setColor(Color.RED);
-        if (usedTime > 0)
-            g.drawString(String.valueOf(1000 / usedTime) + " fps", 0, Stage.HEIGHT - 50);
-        else
-            g.drawString("--- fps", 0, Stage.HEIGHT - 50);
-    }
-
-    /**
-     * Paint the player's current score onto the gameplay screen
-     *
-     * @param g Graphics
-     * @param score Player's current score
-     */
-    public void paintScore(Graphics g, int score) {
-        g.setColor(Color.RED);
-        g.setFont(new Font("BitPotionExt", 0, 48));
-        g.drawString(String.valueOf(score), 310, 545);
-    }
-
-    /**
-     * Track the player's score through the game
-     */
-    public void trackScore() {
-        Timer timer = new Timer();
-
-        try {
-            // Create a new task for the timer to run
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (isPaused) { } // Do nothing is game is paused
-                    else if (hitBlood) { // Inc by 20 if player hit tiger blood
-                        score += 20;
-                    } else { // Default inc by 10
-                        score += 10;
-                    }
-                }
-            }, 2000, 2000); // Occurs every 2 sec after 2 sec
-        } catch (Exception e) {
-            timer.cancel(); // Cancel the timer if something goes wrong
-        }
-    }
-
-    /**
-     * Paints a health bar onto the game screen. Dynamically changes with player's health
-     *
-     * @param g Graphics
-     * @param health Player's current health
-     */
-    public void paintHealthBar(Graphics g, int health) {
-        int fillAmount = (int) (health * 2.5); // Multiply player health by 2.5 to fill correct amount of bar
-
-        g.setColor(new Color(81, 217, 61));
-        g.fillRect(38, 523, 250, 27);
-        g.setColor(Color.BLACK);
-        g.fillRect(40, 525, 246, 23);
-        g.setColor(new Color(81, 217, 61));
-        g.fillRect(38, 523, fillAmount, 27);
-
-        g.drawImage(ResourceLoader.getInstance().getSprite("healthPlus.png"), 10, 521, this);
-    }
-
-    /**
-     * Paint currently active powerups onto the game screen
-     *
-     * @param g Graphics
-     */
-    public void paintPowerUps(Graphics g) {
-        if (hitBlood) {
-            g.drawImage(ResourceLoader.getInstance().getSprite("tigerBloodsm.png"), 35, 497, this);
-        }
-
-        if (hitTire) {
-            g.drawImage(ResourceLoader.getInstance().getSprite("tiresm.png"), 65, 497, this);
-        }
-    }
-
-    /**
-     * Sets behaviour for when car collides with tiger blood
-     */
-    public void setTigerBlood() {
-        final Timer tigerTimer = new Timer();
-
-        try {
-            hitBlood = true; // When car collides set to true
-
-            tigerTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    // When timer runs set to false and turn off timer
-                    hitBlood = false;
-                    tigerTimer.cancel();
-                }
-            }, 10000, 1); // Shuts off after a 10 sec delay
-        } catch (Exception e) {
-            tigerTimer.cancel(); // Turn off timer if something goes wrong
-        }
-    }
-
-    /**
-     * Sets behaviour for when car collides with a tire
-     */
-    public void setTire() {
-        final Timer tireTimer = new Timer();
-
-        try {
-            hitTire = true; // When car collides set to true
-
-            tireTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    // When timer runs set to false and turn off timer
-                    hitTire = false;
-                    tireTimer.cancel();
-                }
-            }, 10000, 1); // Shuts off after 10 sec
-        } catch (Exception e) {
-            tireTimer.cancel(); // Turn off timer if something goes wrong
-        }
-    }
-
-    public void paint(Graphics g) {
-    }
-
-    /**
-     * Paint the Game Over screen
-     */
-    public void paintGameOver() {
-        endGame();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        g.setColor(new Color(48, 48, 48));
-        g.fillRect(230, 190, 520, 270);
-
-        g.setColor(Color.WHITE);
-        g.fillRect(240, 200, 500, 250);
-
-        g.drawImage(ResourceLoader.getInstance().getSprite("goTitle.png"), 190, 30, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("retryButton.png"), 18, 475, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 475, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 475, this);
-
-        writeFact();
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the Main Menu
-     */
-    public void paintMainMenu() {
-        onMainMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        g.drawImage(ResourceLoader.getInstance().getSprite("title.png"), 190, 30, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("playButton.png"), 18, 250, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("highscoreButton.png"), 343, 250, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("customizeButton.png"), 667, 250, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("optionsButton.png"), 165, 380, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 515, 380, this);
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the customization menu
-     */
-    public void paintCustomizationMenu() {
-        onCustomizationMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        g.drawImage(ResourceLoader.getInstance().getSprite("customizeTitle.png"), 190, 30, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the Pause Menu
-     */
-    public void paintPauseMenu() {
-        onPauseMenu();
-        isPaused = true;
-
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        g.drawImage(ResourceLoader.getInstance().getSprite("pausedTitle.png"), 190, 30, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("resumeButton.png"), 18, 300, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 300, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 300, this);
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the Options Menu
-     */
-    public void paintOptionsMenu() {
-        onOptionsMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        g.drawImage(ResourceLoader.getInstance().getSprite("optionsTitle.png"), 190, 30, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("controlsButton.png"), 18, 300, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("videoButton.png"), 343, 300, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("audioButton.png"), 667, 300, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the Audio Options Menu
-     */
-    public void paintAudioOptionsMenu() {
-        onAudioOptionsMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        g.drawImage(ResourceLoader.getInstance().getSprite("audioTitle.png"), 190, 30, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the Video Options Menu
-     */
-    public void paintVideoOptionsMenu() {
-        onVideoOptionsMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        g.drawImage(ResourceLoader.getInstance().getSprite("videoTitle.png"), 190, 30, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the Control Options Menu
-     */
-    public void paintControlsOptionsMenu() {
-        onControlsOptionsMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        g.drawImage(ResourceLoader.getInstance().getSprite("controlsTitle.png"), 190, 30, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the Highscore Menu
-     */
-    public void paintHighscoreMenu() throws IOException {
-        onHighscoreMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        g.setColor(new Color(48, 48, 48));
-        g.fillRect(230, 190, 520, 270);
-
-        g.setColor(Color.WHITE);
-        g.fillRect(240, 200, 500, 250);
-
-        g.drawImage(ResourceLoader.getInstance().getSprite("highscoreTitle.png"), 190, 30, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 300, 210, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 620, 210, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 300, 270, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 620, 270, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 300, 330, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 620, 330, this);
-
-
-        // TODO: 2019-08-10 find a better way to make the strings for the score
-        String frist = "1st: "+ Integer.toString(getScores().get(3));
-        String second = "2nd: "+ Integer.toString(getScores().get(2));
-        String third = "3rd: "+ Integer.toString(getScores().get(1));
-        String fourth = "4th: " + Integer.toString(getScores().get(0));
-
-        g.setColor(new Color(242, 124, 143));
-        g.setFont(new Font("BitPotionExt", 0, 50));
-        g.drawString(frist, 425, 240);
-
-        g.setColor(new Color(41, 59, 61));
-        g.setFont(new Font("BitPotionExt", 0, 50));
-        g.drawString(second, 425, 300);
-        g.drawString(third, 425, 360);
-        g.drawString(fourth, 425, 420);
-        strategy.show();
-    }
-
     /**
      * Randomly generate a hazard or powerup to appear on gameplay screen
      */
@@ -670,6 +361,341 @@ public class MooseTheGame extends Stage implements KeyListener {
                 actors.add(tire);
                 break;
         }
+    }
+
+    /**
+     * Track the player's score through the game
+     */
+    public void trackScore() {
+        Timer timer = new Timer();
+
+        try {
+            // Create a new task for the timer to run
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (isPaused) { } // Do nothing is game is paused
+                    else if (hitBlood) { // Inc by 20 if player hit tiger blood
+                        score += 20;
+                    } else { // Default inc by 10
+                        score += 10;
+                    }
+                }
+            }, 2000, 2000); // Occurs every 2 sec after 2 sec
+        } catch (Exception e) {
+            timer.cancel(); // Cancel the timer if something goes wrong
+        }
+    }
+
+    /**
+     * Sets behaviour for when car collides with tiger blood
+     */
+    public void setTigerBlood() {
+        final Timer tigerTimer = new Timer();
+
+        try {
+            hitBlood = true; // When car collides set to true
+
+            tigerTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // When timer runs set to false and turn off timer
+                    hitBlood = false;
+                    tigerTimer.cancel();
+                }
+            }, 10000, 1); // Shuts off after a 10 sec delay
+        } catch (Exception e) {
+            tigerTimer.cancel(); // Turn off timer if something goes wrong
+        }
+    }
+
+    /**
+     * Sets behaviour for when car collides with a tire
+     */
+    public void setTire() {
+        final Timer tireTimer = new Timer();
+
+        try {
+            hitTire = true; // When car collides set to true
+
+            tireTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // When timer runs set to false and turn off timer
+                    hitTire = false;
+                    tireTimer.cancel();
+                }
+            }, 10000, 1); // Shuts off after 10 sec
+        } catch (Exception e) {
+            tireTimer.cancel(); // Turn off timer if something goes wrong
+        }
+    }
+
+    /**
+     * Reset current game
+     */
+    public void resetGame() {
+        gameState = eGameState.GS_Playing;
+        score = 0;
+        hitBlood = false;
+        hitTire = false;
+        actors.clear();
+        initWorld();
+    }
+
+    public void paint(Graphics g) {
+    }
+
+    public void paintFPS(Graphics g) {
+        g.setColor(Color.RED);
+        if (usedTime > 0)
+            g.drawString(String.valueOf(1000 / usedTime) + " fps", 0, Stage.HEIGHT - 50);
+        else
+            g.drawString("--- fps", 0, Stage.HEIGHT - 50);
+    }
+
+    /**
+     * Paint the player's current score onto the gameplay screen
+     *
+     * @param g Graphics
+     * @param score Player's current score
+     */
+    public void paintScore(Graphics g, int score) {
+        g.setColor(Color.RED);
+        g.setFont(new Font("BitPotionExt", 0, 48));
+        g.drawString(String.valueOf(score), 310, 545);
+    }
+
+    /**
+     * Paint the Game Over screen
+     */
+    public void paintGameOver() {
+        endGame();
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+        drawBox(g);
+
+        paintHeader(g, "goTitle");
+        g.drawImage(ResourceLoader.getInstance().getSprite("retryButton.png"), 18, 475, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 475, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 475, this);
+
+        writeFact(); // Write a safety fact to thr screen
+
+        strategy.show();
+    }
+
+    /**
+     * Paint the Main Menu
+     */
+    public void paintMainMenu() {
+        onMainMenu();
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        paintHeader(g, "title");
+        g.drawImage(ResourceLoader.getInstance().getSprite("playButton.png"), 18, 250, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("highscoreButton.png"), 343, 250, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("customizeButton.png"), 667, 250, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("optionsButton.png"), 165, 380, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 515, 380, this);
+
+        strategy.show();
+    }
+
+    /**
+     * Paint the customization menu
+     */
+    public void paintCustomizationMenu() {
+        onCustomizationMenu();
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        paintHeader(g, "customizeTitle");
+        paintBackButton(g);
+
+        strategy.show();
+    }
+
+    /**
+     * Paint the Pause Menu
+     */
+    public void paintPauseMenu() {
+        onPauseMenu();
+        isPaused = true;
+
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        paintHeader(g, "pausedTitle");
+        g.drawImage(ResourceLoader.getInstance().getSprite("resumeButton.png"), 18, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 300, this);
+
+        strategy.show();
+    }
+
+    /**
+     * Paint the Options Menu
+     */
+    public void paintOptionsMenu() {
+        onOptionsMenu();
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        paintHeader(g, "optionsTitle");
+        paintBackButton(g);
+        g.drawImage(ResourceLoader.getInstance().getSprite("controlsButton.png"), 18, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("videoButton.png"), 343, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("audioButton.png"), 667, 300, this);
+
+        strategy.show();
+    }
+
+    /**
+     * Paint the Audio Options Menu
+     */
+    public void paintAudioOptionsMenu() {
+        onAudioOptionsMenu();
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        paintHeader(g, "audioTitle");
+        paintBackButton(g);
+
+        strategy.show();
+    }
+
+    /**
+     * Paint the Video Options Menu
+     */
+    public void paintVideoOptionsMenu() {
+        onVideoOptionsMenu();
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        paintHeader(g, "videoTitle");
+        paintBackButton(g);
+
+        strategy.show();
+    }
+
+    /**
+     * Paint the Control Options Menu
+     */
+    public void paintControlsOptionsMenu() {
+        onControlsOptionsMenu();
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        paintHeader(g, "controlsTitle");
+        paintBackButton(g);
+
+        strategy.show();
+    }
+
+    /**
+     * Paint the Highscore Menu
+     */
+    public void paintHighscoreMenu() throws IOException {
+        onHighscoreMenu();
+        Graphics g = strategy.getDrawGraphics();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+        drawBox(g);
+
+        paintHeader(g, "highscoreTitle");
+        paintBackButton(g);
+        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 300, 210, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 620, 210, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 300, 270, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 620, 270, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 300, 330, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 620, 330, this);
+
+
+        // TODO: 2019-08-10 find a better way to make the strings for the score
+        String frist = "1st: "+ Integer.toString(getScores().get(3));
+        String second = "2nd: "+ Integer.toString(getScores().get(2));
+        String third = "3rd: "+ Integer.toString(getScores().get(1));
+        String fourth = "4th: " + Integer.toString(getScores().get(0));
+
+        g.setColor(new Color(242, 124, 143));
+        g.setFont(new Font("BitPotionExt", 0, 50));
+        g.drawString(frist, 425, 240);
+
+        g.setColor(new Color(41, 59, 61));
+        g.setFont(new Font("BitPotionExt", 0, 50));
+        g.drawString(second, 425, 300);
+        g.drawString(third, 425, 360);
+        g.drawString(fourth, 425, 420);
+        strategy.show();
+    }
+
+    /**
+     * Paints a health bar onto the game screen. Dynamically changes with player's health
+     *
+     * @param g Graphics
+     * @param health Player's current health
+     */
+    public void paintHealthBar(Graphics g, int health) {
+        int fillAmount = (int) (health * 2.5); // Multiply player health by 2.5 to fill correct amount of bar
+
+        g.setColor(new Color(81, 217, 61));
+        g.fillRect(38, 523, 250, 27);
+        g.setColor(Color.BLACK);
+        g.fillRect(40, 525, 246, 23);
+        g.setColor(new Color(81, 217, 61));
+        g.fillRect(38, 523, fillAmount, 27);
+
+        g.drawImage(ResourceLoader.getInstance().getSprite("healthPlus.png"), 10, 521, this);
+    }
+
+    /**
+     * Paint currently active powerups onto the game screen
+     *
+     * @param g Graphics
+     */
+    public void paintPowerUps(Graphics g) {
+        if (hitBlood) {
+            g.drawImage(ResourceLoader.getInstance().getSprite("tigerBloodsm.png"), 35, 497, this);
+        }
+
+        if (hitTire) {
+            g.drawImage(ResourceLoader.getInstance().getSprite("tiresm.png"), 65, 497, this);
+        }
+    }
+
+    public void paintBackButton(Graphics g) {
+        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 490, this);
+    }
+
+    public void paintHeader(Graphics g, String name) {
+        g.drawImage(ResourceLoader.getInstance().getSprite(name + ".png"), 190, 20, this);
+    }
+
+    /**
+     * Draw a box to write text in
+     *
+     * @param g Graphics
+     */
+    public void drawBox(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.fillRect(227, 187, 526, 276);
+
+        g.setColor(new Color(48, 48, 48));
+        g.fillRect(230, 190, 520, 270);
+
+        g.setColor(Color.WHITE);
+        g.fillRect(240, 200, 500, 250);
     }
 
     /**
@@ -728,19 +754,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
 
         return factBuilder;
-    }
-
-
-    /**
-     * Reset current game
-     */
-    public void resetGame() {
-        gameState = eGameState.GS_Playing;
-        score = 0;
-        hitBlood = false;
-        hitTire = false;
-        actors.clear();
-        initWorld();
     }
 
     public void keyPressed(KeyEvent e) {
