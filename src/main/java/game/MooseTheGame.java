@@ -272,7 +272,6 @@ public class MooseTheGame extends Stage implements KeyListener {
                         continue;
                     }else {
                         car.loseHealth(1);
-                        // System.out.println("");
                     }
 
 
@@ -495,39 +494,40 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.fillRect(0, 0, getWidth(), getHeight());
 
         g.setColor(new Color(48, 48, 48));
-        g.fillRect(200, 190, 580, 270);
+        g.fillRect(230, 190, 520, 270);
 
         g.setColor(Color.WHITE);
-        g.fillRect(210, 200, 560, 250);
+        g.fillRect(240, 200, 500, 250);
 
         g.drawImage(ResourceLoader.getInstance().getSprite("highscoreTitle.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 310, 210, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 630, 210, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 310, 270, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 630, 270, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 310, 330, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 630, 330, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 300, 210, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 620, 210, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 300, 270, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 620, 270, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 300, 330, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 620, 330, this);
 
 
         // TODO: 2019-08-10 find a better way to make the strings for the score
-        String frist = "1st: "+ Integer.toString(getScores().get(2));
-        String second = "2nd: "+ Integer.toString(getScores().get(1));
-        String third = "3rd: "+ Integer.toString(getScores().get(0));
+        String frist = "1st: "+ Integer.toString(getScores().get(3));
+        String second = "2nd: "+ Integer.toString(getScores().get(2));
+        String third = "3rd: "+ Integer.toString(getScores().get(1));
+        String fourth = "4th: " + Integer.toString(getScores().get(0));
 
         g.setColor(new Color(242, 124, 143));
         g.setFont(new Font("BitPotionExt", 0, 50));
-        g.drawString(frist, 430, 240);
+        g.drawString(frist, 425, 240);
 
         g.setColor(new Color(41, 59, 61));
         g.setFont(new Font("BitPotionExt", 0, 50));
-        g.drawString(second, 430, 300);
-        g.drawString(third, 430, 360);
+        g.drawString(second, 425, 300);
+        g.drawString(third, 425, 360);
+        g.drawString(fourth, 425, 420);
         strategy.show();
     }
 
     private void actorGenerator() {
-
 
         Random randy = new Random();
         int randNum = randy.nextInt(10000);
@@ -542,7 +542,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             picker = 3;
         } else if (randNum > 400 && randNum < 415) {
             picker = 4;
-        } else if (randNum > 415 && randNum < 430) {
+        } else if (randNum > 415 && randNum < 400) {
             picker = 6;
         }
         switch (picker) {
@@ -588,7 +588,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         for (String fact : factList) {
             g.drawString(fact, 250, y);
             y += 30;
-
         }
 
         g.setFont(new Font("BitPotionExt", 0, 23));
@@ -625,8 +624,8 @@ public class MooseTheGame extends Stage implements KeyListener {
             factBuilder.add("Care and attention when driving is your");
             factBuilder.add("best defense against moose-vehicle accidents.");
         }
-        return factBuilder;
 
+        return factBuilder;
     }
 
 
@@ -644,25 +643,28 @@ public class MooseTheGame extends Stage implements KeyListener {
             Actor.debugCollision = !Actor.debugCollision;
         }
 
-        if (e.getKeyChar() == 'R' || e.getKeyChar() == 'r') {
-            if (gameState == eGameState.GS_GameOver) {
-                resetGame();
-            }
-
-        } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             if (gameState == eGameState.GS_Playing) {
                 gameState = eGameState.GS_Paused;
-            } else if (gameState == eGameState.GS_Paused) {
+            }
+
+            else if (gameState == eGameState.GS_Paused) {
                 gameState = eGameState.GS_Playing;
             }
-        } else if (e.getKeyChar() == 'A' || e.getKeyChar() == 'a') {
+        }
+
+        else if (e.getKeyChar() == 'A' || e.getKeyChar() == 'a') {
             if (gameState == eGameState.GS_Options) {
                 gameState = eGameState.GS_AudioOptions;
             }
-        } else if (e.getKeyChar() == 'B' || e.getKeyChar() == 'b') {
+        } // End A
+
+        else if (e.getKeyChar() == 'B' || e.getKeyChar() == 'b') {
             if (gameState == eGameState.GS_Options || gameState == eGameState.GS_Customizations || gameState == eGameState.GS_HighScore) {
                 gameState = eGameState.GS_MainMenu;
-            } else if (gameState == eGameState.GS_Controls || gameState == eGameState.GS_AudioOptions
+            }
+
+            else if (gameState == eGameState.GS_Controls || gameState == eGameState.GS_AudioOptions
                     || gameState == eGameState.GS_VideoOptions) {
                 gameState = eGameState.GS_Options;
             }
@@ -671,7 +673,9 @@ public class MooseTheGame extends Stage implements KeyListener {
         else if (e.getKeyChar() == 'C' || e.getKeyChar() == 'c') {
             if (gameState == eGameState.GS_MainMenu) {
                 gameState = eGameState.GS_Customizations;
-            } else if (gameState == eGameState.GS_Options) {
+            }
+
+            else if (gameState == eGameState.GS_Options) {
                 gameState = eGameState.GS_Customizations;
             }
         } // End C
@@ -682,11 +686,16 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
         } // End H
 
-
         else if (e.getKeyChar() == 'M' || e.getKeyChar() == 'm') {
             if (gameState == eGameState.GS_GameOver) {
                 gameState = eGameState.GS_MainMenu;
-            }else if (gameState==eGameState.GS_AudioOptions)
+            }
+
+            else if (gameState == eGameState.GS_Paused) {
+                gameState = eGameState.GS_MainMenu;
+            }
+
+            else if (gameState==eGameState.GS_AudioOptions)
                 sound = false;
         } // End M
 
@@ -697,7 +706,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         } // End O
 
         else if (e.getKeyChar() == 'P' || e.getKeyChar() == 'p') {
-            // TODO: Game does not init properly when started this way ex. no controls, cant close window
             if (gameState == eGameState.GS_MainMenu) {
                 gameState = eGameState.GS_Playing;
                 resetGame();
@@ -711,12 +719,18 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
         } // End Q
 
+        else if (e.getKeyChar() == 'R' || e.getKeyChar() == 'r') {
+            if (gameState == eGameState.GS_GameOver) {
+                resetGame();
+            }
+        } // End R
+
 
         else if (e.getKeyChar() == 'V' || e.getKeyChar() == 'v') {
             if (gameState == eGameState.GS_Options) {
                 gameState = eGameState.GS_VideoOptions;
             }
-        }
+        } // End V
     }
 
     public void keyReleased(KeyEvent e) {
@@ -731,7 +745,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         String file = "highscore.dat";
         ArrayList<Integer> scoreBored = getScores();
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             if (newScore > scoreBored.get(i)) {
                 scoreBored.remove(0);
                 scoreBored.add(newScore);
@@ -739,12 +753,13 @@ public class MooseTheGame extends Stage implements KeyListener {
                 break;
             }
         }
+
         try {
 
             BufferedWriter output = new BufferedWriter(new FileWriter(file, true));
             clearTheFile();
             output.flush();
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 4; i++) {
                 output.append(String.valueOf(scoreBored.get(i)));
                 output.newLine();
             }
@@ -777,7 +792,6 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     public static void main(String[] args) throws IOException {
         MooseTheGame mooseGame = new MooseTheGame();
-        //mooseGame.paintMainMenu();
         mooseGame.game();
     }
 

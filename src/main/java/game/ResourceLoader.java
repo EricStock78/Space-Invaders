@@ -85,6 +85,7 @@ public class ResourceLoader implements ImageObserver {
 		try {
 			url = getClass().getClassLoader().getResource("res/" + name);
 			image = ImageIO.read(url);
+
 			//store a compatible image instead of the original format
 			BufferedImage compatible = createCompatible(image.getWidth(), image.getHeight(), Transparency.BITMASK);
 			compatible.getGraphics().drawImage(image, 0, 0, this);
@@ -111,7 +112,6 @@ public class ResourceLoader implements ImageObserver {
 			Font bitPotion = Font.createFont(Font.TRUETYPE_FONT, myStream);
 			ge.registerFont(bitPotion);
 		} catch (Exception ex) {
-			//ex.printStackTrace();
 			System.err.println("Font not loaded.");
 		}
 	}
