@@ -12,7 +12,7 @@ public class Moose extends Actor {
         super(canvas, 120, 120, 50, 50);
 
         Random randy = new Random();
-        vx = -5;// x travel speed should always be negitive to simulate driving -10 is road spead
+        vx = -5;// x travel speed should always be negative to simulate driving -10 is road speed
         vy = randy.nextInt(20) - 10;// y travel speed
 
         sprites = new String[]{"moose1.png", "moose2.png", "moose3.png"};
