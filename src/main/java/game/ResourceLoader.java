@@ -85,6 +85,7 @@ public class ResourceLoader implements ImageObserver {
 		try {
 			url = getClass().getClassLoader().getResource("res/" + name);
 			image = ImageIO.read(url);
+
 			//store a compatible image instead of the original format
 			BufferedImage compatible = createCompatible(image.getWidth(), image.getHeight(), Transparency.BITMASK);
 			compatible.getGraphics().drawImage(image, 0, 0, this);
@@ -101,28 +102,16 @@ public class ResourceLoader implements ImageObserver {
 		return (infoflags & (ALLBITS | ABORT)) == 0;
 	}
 
-	/*public static void createFont() {
-		try {
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			InputStream inStream = MooseTheGame.class.getResourceAsStream("res/BitPotionExt.ttf");
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, inStream));
-		} catch (FontFormatException | IOException e) {
-			e.printStackTrace();
-		}
-	}*/
-
 	public static void createFont() {
 
 		// TODO: How to load this from relative path??
 		try {
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			BufferedInputStream myStream = new BufferedInputStream(
-					new FileInputStream(("Space-Invaders\\src\\main\\resources\\res\\BitPotionExt.ttf")));
+					new FileInputStream(("C:\\Users\\user\\IdeaProjects\\Space-Invaders\\src\\main\\resources\\res\\BitPotionExt.ttf")));
 			Font bitPotion = Font.createFont(Font.TRUETYPE_FONT, myStream);
-			//Font bitPotion = ttfBase.deriveFont(Font.PLAIN, 32);
 			ge.registerFont(bitPotion);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			System.err.println("Font not loaded.");
 		}
 	}
