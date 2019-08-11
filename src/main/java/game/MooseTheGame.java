@@ -13,9 +13,23 @@ import java.util.Timer;
 import javax.swing.*;
 
 import actors.*;
+/**
+ *                                                    Moose: The Game
+ * Moose: The Game is designed to be a fun way to raise awareness about driving safety in Newfoundland. The objective of
+ * the game is to steer a car along a Newfoundland highway to get power-ups and avoid hazards on the road to get the
+ * highest score possible, which increases by 10 every 2 seconds the player is alive. The game also includes an
+ * educational component to raise road safety awareness in Newfoundland. After unsafe driving causes the player to lose,
+ * they are presented with a driving safety tip on the game over screen.
+ *
+ * Co-developed by
+ * Emma Troke, Gabe Walsh, Greg Tracy
+ */
+
 
 public class MooseTheGame extends Stage implements KeyListener {
-
+    /**
+     *Enum Method used for changing the Game States
+     */
     public enum eGameState { // Game states
         GS_Playing,
         GS_Paused,
@@ -51,7 +65,8 @@ public class MooseTheGame extends Stage implements KeyListener {
     private eGameState gameState;
 
     /**
-     * Constructor method
+     * Moose The Game constructor:
+     * Builds the game itself
      */
     public MooseTheGame() {
         //init the UI
@@ -95,8 +110,9 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     /**
-     * The main game loop
-     *
+     * Game
+     * Launches the game.
+     * Creates a basic game loop for the game to run around
      * @throws IOException
      */
     public void game() throws IOException {
@@ -166,6 +182,11 @@ public class MooseTheGame extends Stage implements KeyListener {
                 usedTime = System.currentTimeMillis() - startTime;
             }
         }
+    /**
+     * InitWorld
+     * Creates the game world.
+     * Builds the objects to be used by the game on start
+     */
 
     public void initWorld() {
 
@@ -177,10 +198,11 @@ public class MooseTheGame extends Stage implements KeyListener {
         keyReleasedHandlerLeft = new InputHandler(this, car);
         keyReleasedHandlerLeft.action = InputHandler.Action.RELSEASE;
     }
-
     /**
-     * Update the Gameplay Screen
+     * UpdateWorld
+     * Updates the object values for each loop of the game
      */
+
     public void updateWorld() {
 
         roadHorizontalOffset += 10;
