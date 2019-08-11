@@ -457,8 +457,20 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
+        g.setColor(new Color(48, 48, 48));
+        g.fillRect(200, 190, 580, 270);
+
+        g.setColor(Color.WHITE);
+        g.fillRect(210, 200, 560, 250);
+
         g.drawImage(ResourceLoader.getInstance().getSprite("highscoreTitle.png"), 190, 30, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 470, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 310, 210, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 630, 210, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 310, 270, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 630, 270, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 310, 330, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 630, 330, this);
 
 
         // TODO: 2019-08-10 find a better way to make the strings for the score
@@ -466,11 +478,14 @@ public class MooseTheGame extends Stage implements KeyListener {
         String second = "2nd: "+ Integer.toString(getScores().get(1));
         String third = "3rd: "+ Integer.toString(getScores().get(0));
 
-        g.setColor(new Color(10, 255, 14));
+        g.setColor(new Color(242, 124, 143));
         g.setFont(new Font("BitPotionExt", 0, 50));
-        g.drawString(frist, 200, 250);
-        g.drawString(second, 200, 300);
-        g.drawString(third, 200, 350);
+        g.drawString(frist, 430, 240);
+
+        g.setColor(new Color(41, 59, 61));
+        g.setFont(new Font("BitPotionExt", 0, 50));
+        g.drawString(second, 430, 300);
+        g.drawString(third, 430, 360);
         strategy.show();
     }
 
@@ -519,10 +534,9 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void writeFact() {
-        Random randy = new Random();
         Graphics g = strategy.getDrawGraphics();
 
-        g.setColor(new Color(11, 33, 64));
+        g.setColor(new Color(41, 59, 61));
         g.setFont(new Font("BitPotionExt", 0, 60));
         g.drawString("Did You Know?", 350, 240);
         g.setFont(new Font("BitPotionExt", 0, 32));
@@ -545,12 +559,12 @@ public class MooseTheGame extends Stage implements KeyListener {
         int i = randy.nextInt(6);
 
         if (i == 0) {
-            factBuilder.add("Even in areas with very low moose density,");
+            factBuilder.add("Even in areas with a very low moose density,");
             factBuilder.add("moose are still attracted to roadways and");
             factBuilder.add("can pose a hazard to drivers.");
         } else if (i == 1) {
-            factBuilder.add("Most accidents occur on clear nights and on");
-            factBuilder.add("straight road sections. ");
+            factBuilder.add("Most moose accidents occur on clear nights");
+            factBuilder.add("and on straight road sections. ");
             factBuilder.add("Don't let yourself be distracted.");
         } else if (i == 2) {
             factBuilder.add("More than 70% of accidents occur between");
@@ -592,9 +606,6 @@ public class MooseTheGame extends Stage implements KeyListener {
                 resetGame();
             }
 
-            //else if (stage.game) {
-            //   stage.paintPauseMenu();
-            //}
         } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             if (gameState == eGameState.GS_Playing) {
                 gameState = eGameState.GS_Paused;
