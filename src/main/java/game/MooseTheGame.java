@@ -100,8 +100,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         /*************************************************************************************************************
          *                                                      GAME LOOP
          **************************************************************************************************************/
-        inGame();
         usedTime = 0;
+        score = 0;
         trackScore();
         gameState = eGameState.GS_MainMenu;
 
@@ -127,17 +127,14 @@ public class MooseTheGame extends Stage implements KeyListener {
                 }
 
                 if (gameState == eGameState.GS_Playing) {
-                   // while (!isPaused) {
                         checkCollision();
                         actorGenerator();
                         updateWorld();
                         paintWorld();
-                    //}
                 } else if (gameState == eGameState.GS_MainMenu) {
                     paintMainMenu();
                 } else if (gameState == eGameState.GS_GameOver) {
                     paintGameOver();
-
                 } else if (gameState == eGameState.GS_Options) {
                     paintOptionsMenu();
                 } else if (gameState == eGameState.GS_VideoOptions) {
@@ -279,6 +276,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
         paintScore(g, score);
         drawHealthBar(car.getCurrentHealth());
+        drawPowerUps();
 
 
         //swap buffer
@@ -300,14 +298,15 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void trackScore() {
-        score = 0;
         Timer timer = new Timer();
 
         try {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (hitBlood) {
+                    if (isPaused) { }
+
+                    else if (hitBlood) {
                         score += 20;
                     } else {
                         score += 10;
@@ -331,6 +330,18 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.fillRect(38, 523, fillAmount, 27);
 
         g.drawImage(ResourceLoader.getInstance().getSprite("healthPlus.png"), 10, 521, this);
+    }
+
+    public void drawPowerUps() {
+        Graphics g = strategy.getDrawGraphics();
+
+        if (hitBlood) {
+            g.drawImage(ResourceLoader.getInstance().getSprite("tigerBloodsm.png"), 35, 497, this);
+        }
+
+        if (hitTire) {
+            g.drawImage(ResourceLoader.getInstance().getSprite("tiresm.png"), 65, 497, this);
+        }
     }
 
     public void setTigerBlood() {
@@ -648,6 +659,10 @@ public class MooseTheGame extends Stage implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             if (gameState == eGameState.GS_Playing) {
                 gameState = eGameState.GS_Paused;
+            }
+            else if (gameState == eGameState.GS_Paused) {
+                isPaused = false;
+                gameState = eGameState.GS_Playing;
             }
         }
 
