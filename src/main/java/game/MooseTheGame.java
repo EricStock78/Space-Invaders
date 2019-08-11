@@ -50,6 +50,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private int score;
     private boolean hitBlood = false;
+    private boolean hitTire = false;
 
     private eGameState gameState;
 
@@ -201,6 +202,24 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
     }
 
+    public void setTire() {
+        final Timer tireTimer = new Timer();
+
+        try {
+            hitTire = true;
+
+            tireTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    hitTire = false;
+                    tireTimer.cancel();
+                }
+            }, 10000, 1);
+        } catch (Exception e) {
+            tireTimer.cancel();
+        }
+    }
+
     public void paint(Graphics g) {
     }
 
@@ -249,8 +268,12 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             if (actors.get(i) instanceof PotHole) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    car.loseHealth(1);
-                    // System.out.println("");
+                    if (hitTire) {
+                        continue;
+                    }else {
+                        car.loseHealth(1);
+                        // System.out.println("");
+                    }
 
 
                     if (car.getCurrentHealth() == 0) {
@@ -260,6 +283,13 @@ public class MooseTheGame extends Stage implements KeyListener {
 
                     }
 
+                }
+            }
+
+            if (actors.get(i) instanceof Tire) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    setTire();
+                    actors.get(i).setMarkedForRemoval(true);
                 }
             }
 
@@ -497,6 +527,8 @@ public class MooseTheGame extends Stage implements KeyListener {
             picker = 3;
         } else if (randNum > 400 && randNum < 415) {
             picker = 4;
+        } else if (randNum > 415 && randNum < 430) {
+            picker = 6;
         }
         switch (picker) {
             case 1:
@@ -521,6 +553,10 @@ public class MooseTheGame extends Stage implements KeyListener {
             case 5:
                 PotHole potHole = new PotHole(this);
                 actors.add(potHole);
+                break;
+            case 6:
+                Tire tire = new Tire(this);
+                actors.add(tire);
                 break;
         }
     }
