@@ -6,34 +6,42 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Car extends Actor implements KeyboardControllable {
-    private boolean up,down,left,right;
+    private boolean up, down, left, right;
     private boolean isWASD; // for switching between controls
     private final int MAXHEALTH;
     private int currentHealth;
-    private ArrayList<String> cars = new ArrayList<>();// to be used to select between cars
+    private String carString;
 
 
-    public Car(Stage stage) {
 
-        super(stage, 145, 73, 145, 73 );
-        cars.add("Car.png");// convert to method
-        cars.add("Car1.png");
-        sprites = new String[]{cars.get(1)};
+    public Car(Stage stage,int carType) {
+        //carType = CarType.car1;
+
+        super(stage, 145, 73, 145, 73);
+
+        switch (carType){
+            case 1:sprites = new String[]{"car1.png"};
+            case 2:sprites = new String[]{"car2.png"};
+            case 3:sprites = new String[]{"car3.png"};
+            case 4:sprites = new String[]{"car4.png"};
+            case 5:sprites = new String[]{"car5.png"};
+            default:sprites = new String[]{"car1.png"};
+        }
+
         MAXHEALTH = 100;
         currentHealth = MAXHEALTH;
 
         frame = 0;
         frameSpeed = 35;
         actorSpeed = 10;
-        posX = Stage.WIDTH/2 - 128;
-        posY = Stage.HEIGHT/2 - 128;
+        posX = Stage.WIDTH / 2 - 128;
+        posY = Stage.HEIGHT / 2 - 128;
     }
 
-    public  void update() {
+    public void update() {
         super.update();
         updateSpeed();
     }
-
 
 
     protected void updateSpeed() {
@@ -44,19 +52,19 @@ public class Car extends Actor implements KeyboardControllable {
         if (up)
             vy = -actorSpeed;
         if (left)
-            vx = -actorSpeed-2;
+            vx = -actorSpeed + 5;
         if (right)
             vx = actorSpeed;
 
         //don't allow scrolling off the edge of the screen
-        if (posX - getWidth()/2 > 0 && vx < 1)
+        if (posX - getWidth() / 2 > 0 && vx < 1)
             posX += vx;
-        else if (posX + getWidth()  + (getWidth()/2)< Stage.WIDTH && vx > 1)
+        else if (posX + getWidth() + (getWidth() / 2) < Stage.WIDTH && vx > 1)
             posX += vx;
 
-        if (posY - getHeight()/2 > 0 && vy < 0)
+        if (posY - getHeight() / 2 > 0 && vy < 0)
             posY += vy;
-        else if (posY + getHeight() + (getHeight()/2) < Stage.HEIGHT && vy > 0)
+        else if (posY + getHeight() + (getHeight() / 2) < Stage.HEIGHT && vy > 0)
             posY += vy;
     }
 
@@ -108,8 +116,7 @@ public class Car extends Actor implements KeyboardControllable {
     public void loseHealth(int damage) {
         if ((currentHealth - damage) < 0) {
             currentHealth = 0;
-        }
-        else {
+        } else {
             currentHealth -= damage;
         }
     }
@@ -117,9 +124,10 @@ public class Car extends Actor implements KeyboardControllable {
     public void gainHealth(int health) {
         if ((currentHealth + health) > MAXHEALTH) {
             currentHealth = MAXHEALTH;
-        }
-        else {
+        } else {
             currentHealth += health;
         }
     }
+
+
 }

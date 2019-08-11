@@ -338,11 +338,11 @@ public class Invaders extends Stage implements KeyListener {
 	}
 
 	public static void main(String[] args) throws IOException {
-      //  DriveDemo demo = new DriveDemo();
-       // demo.game();
+        DriveDemo demo = new DriveDemo();
+        demo.game();
 
-        MooseTheGame mooseTheGame = new MooseTheGame();
-		mooseTheGame.game();
+     //   MooseTheGame mooseTheGame = new MooseTheGame();
+	//	mooseTheGame.game();
 
 		//PongGame pong = new PongGame();
 		//pong.game();
