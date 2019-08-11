@@ -425,7 +425,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                     hitTire = false;
                     tireTimer.cancel();
                 }
-            }, 10000, 1); // Shuts off after 10 sec
+            }, 6000, 1); // Shuts off after 6 sec
         } catch (Exception e) {
             tireTimer.cancel(); // Turn off timer if something goes wrong
         }
