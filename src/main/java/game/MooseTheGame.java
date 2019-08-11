@@ -16,6 +16,8 @@ import javax.swing.*;
 
 import actors.*;
 
+
+
 public class MooseTheGame extends Stage implements KeyListener {
 
     public enum eGameState {
@@ -37,6 +39,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     private InputHandler keyPressedHandlerLeft;
     private InputHandler keyReleasedHandlerLeft;
     private ArrayList<String> factList;
+    private boolean sound;
 
     public long usedTime; //time taken per game step
     public BufferStrategy strategy;     //double buffering strategy
@@ -44,8 +47,10 @@ public class MooseTheGame extends Stage implements KeyListener {
 
     private JFrame frame;
     private Car car;
+
     private int score;
     private boolean hitBlood = false;
+    private boolean hitTire = false;
 
     private eGameState gameState;
 
@@ -91,9 +96,10 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     public void initWorld() {
-        car = new Car(this);
 
+        car = new Car(this,2);
         actors.add(car);
+
 
         keyPressedHandlerLeft = new InputHandler(this, car);
         keyPressedHandlerLeft.action = InputHandler.Action.PRESS;
@@ -196,6 +202,24 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
     }
 
+    public void setTire() {
+        final Timer tireTimer = new Timer();
+
+        try {
+            hitTire = true;
+
+            tireTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    hitTire = false;
+                    tireTimer.cancel();
+                }
+            }, 10000, 1);
+        } catch (Exception e) {
+            tireTimer.cancel();
+        }
+    }
+
     public void paint(Graphics g) {
     }
 
@@ -244,8 +268,12 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             if (actors.get(i) instanceof PotHole) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    car.loseHealth(1);
-                    // System.out.println("");
+                    if (hitTire) {
+                        continue;
+                    }else {
+                        car.loseHealth(1);
+                        // System.out.println("");
+                    }
 
 
                     if (car.getCurrentHealth() == 0) {
@@ -255,6 +283,13 @@ public class MooseTheGame extends Stage implements KeyListener {
 
                     }
 
+                }
+            }
+
+            if (actors.get(i) instanceof Tire) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    setTire();
+                    actors.get(i).setMarkedForRemoval(true);
                 }
             }
 
@@ -287,7 +322,9 @@ public class MooseTheGame extends Stage implements KeyListener {
         trackScore();
         gameState = eGameState.GS_MainMenu;
 
+
         while (isVisible()) {
+            if (sound){ loopSound("music.wav");}
             long startTime = System.currentTimeMillis();
 
             usedTime = System.currentTimeMillis() - startTime;
@@ -505,6 +542,8 @@ public class MooseTheGame extends Stage implements KeyListener {
             picker = 3;
         } else if (randNum > 400 && randNum < 415) {
             picker = 4;
+        } else if (randNum > 415 && randNum < 430) {
+            picker = 6;
         }
         switch (picker) {
             case 1:
@@ -529,6 +568,10 @@ public class MooseTheGame extends Stage implements KeyListener {
             case 5:
                 PotHole potHole = new PotHole(this);
                 actors.add(potHole);
+                break;
+            case 6:
+                Tire tire = new Tire(this);
+                actors.add(tire);
                 break;
         }
     }
@@ -643,7 +686,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         else if (e.getKeyChar() == 'M' || e.getKeyChar() == 'm') {
             if (gameState == eGameState.GS_GameOver) {
                 gameState = eGameState.GS_MainMenu;
-            }
+            }else if (gameState==eGameState.GS_AudioOptions)
+                sound = false;
         } // End M
 
         else if (e.getKeyChar() == 'O' || e.getKeyChar() == 'o') {
@@ -666,6 +710,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                 System.exit(0);
             }
         } // End Q
+
 
         else if (e.getKeyChar() == 'V' || e.getKeyChar() == 'v') {
             if (gameState == eGameState.GS_Options) {

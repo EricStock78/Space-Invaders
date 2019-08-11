@@ -4,28 +4,23 @@ import game.Stage;
 
 import java.util.Random;
 
-public class PotHole  extends Actor {
+public class Tire extends Actor {
     private Random randy = new Random();
 
-    public PotHole(Stage canvas) {
-        super(canvas, 80, 80, 70, 70);
+    public Tire(Stage canvas) {
+        super(canvas, 60, 60, 60, 60);
 
-        vx = -10;
+        vx = -2;
 
-        sprites = new String[] {"pothole.png"};
+        sprites = new String[]{"tire.png"};
 
         posX = 1000;
         posY = randy.nextInt(600);
-        //posY =500; for debuging
     }
-
 
     public void update() {
         super.update();
         posX += vx;
         posY += vy;
-
     }
-
-
 }
