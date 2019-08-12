@@ -15,7 +15,7 @@ public class Tire extends Actor {
         sprites = new String[]{"tire.png"};
 
         posX = 1000;
-        posY = randy.nextInt(600);
+        posY =randy.nextInt(600);
     }
 
     public void update() {

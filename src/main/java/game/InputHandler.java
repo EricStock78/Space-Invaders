@@ -2,8 +2,6 @@ package game;
 
 import java.awt.event.KeyEvent;
 
-import actors.Player;
-
 import actors.KeyboardControllable;
 /**
  * creates a thread to process player input

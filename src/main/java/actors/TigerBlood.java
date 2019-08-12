@@ -15,7 +15,8 @@ public class TigerBlood extends Actor{
         sprites = new String[] {"tigerBlood.png"};
 
         posX = 1000;
-        posY = randy.nextInt(600);
+        posY =400;
+
     }
 
     public void update() {
