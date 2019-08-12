@@ -5,9 +5,14 @@ import game.Stage;
 import java.util.Random;
 
 /**
- * this is a copy paste of the tnt class
+ * Moose class that extends Actor.
+ * Instantiates a moose hazard in Moose: The Game
  */
 public class Moose extends Actor {
+    /**
+     * Constructor for the Moose object
+     * @param canvas
+     */
     public Moose(Stage canvas) {
         super(canvas, 120, 120, 50, 50);
 

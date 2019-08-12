@@ -4,8 +4,17 @@ import game.Stage;
 
 import java.util.Random;
 
+/**
+ * Timbit class that extends Actor
+ * Instantiates a Timbit power-up in Moose: The Game
+ */
 public class Timbit extends Actor{
     private Random randy = new Random();
+
+    /**
+     * Constructor for the Timbit object
+     * @param canvas
+     */
     public Timbit(Stage canvas) {
         super(canvas, 80, 80, 80, 80);
 

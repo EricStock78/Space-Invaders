@@ -5,6 +5,10 @@ import game.Stage;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+/**
+ * Car class that extends Actor
+ * Instantiates the player and sets the controls
+ */
 public class Car extends Actor implements KeyboardControllable {
     private boolean up, down, left, right;
     private boolean w,a,s,d;
@@ -17,6 +21,11 @@ public class Car extends Actor implements KeyboardControllable {
         isWASD = WASD;
     }
 
+    /**
+     * Constructor for the Car object
+     * @param stage
+     * @param carType
+     */
     public Car(Stage stage, int carType) {
 
         super(stage, 145, 73, 145, 73);
@@ -152,14 +161,24 @@ public class Car extends Actor implements KeyboardControllable {
         }
     }
 
+    /**
+     * Getter for Max Health
+     */
     public int getMaxHealth() {
         return MAXHEALTH;
     }
 
+    /**
+     * Getter for Current Health
+     */
     public int getCurrentHealth() {
         return currentHealth;
     }
 
+    /**
+     * Method to reduce current health based on which hazard the player collides with
+     * @param damage
+     */
     public void loseHealth(int damage) {
         if ((currentHealth - damage) < 0) {
             currentHealth = 0;
@@ -168,6 +187,10 @@ public class Car extends Actor implements KeyboardControllable {
         }
     }
 
+    /**
+     * Method to increase current health when player collides with power-up
+     * @param health
+     */
     public void gainHealth(int health) {
         if ((currentHealth + health) > MAXHEALTH) {
             currentHealth = MAXHEALTH;
