@@ -284,6 +284,13 @@ public class MooseTheGame extends Stage implements KeyListener {
                     actors.get(i).setMarkedForRemoval(true);
                 }
             }
+            if (actors.get(i) instanceof EnemyCar) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    factList = getFact();
+                    saveScore(score);
+                    gameState = eGameState.GS_GameOver;
+                }
+            }
         }
     }
 
@@ -318,7 +325,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         //load subimage from the playBtn
 
         //paint the actors
-        for (int i = 1; i < actors.size(); i++) {
+        for (int i = 0; i < actors.size(); i++) {
             Actor actor = actors.get(i);
             actor.paint(g);
         }
@@ -353,6 +360,8 @@ public class MooseTheGame extends Stage implements KeyListener {
             picker = 4;
         } else if (randNum > 415 && randNum < 430) {
             picker = 6;
+        } else if (randNum > 430 && randNum < 445) {
+            picker = 7;
         }
 
         switch (picker) {
@@ -383,8 +392,12 @@ public class MooseTheGame extends Stage implements KeyListener {
                 Tire tire = new Tire(this);
                 actors.add(tire);
                 break;
-            //  default:tire = new Tire(this);
-            // actors.add(tire);
+            case 7:
+                int enemyCarType = randy.nextInt(5);
+                int lane = randy.nextInt(2);
+                EnemyCar enemyCar = new EnemyCar(this, enemyCarType, lane);
+                actors.add(enemyCar);
+                break;
         }
     }
 
@@ -439,28 +452,22 @@ public class MooseTheGame extends Stage implements KeyListener {
      * Sets behaviour for when car collides with a tire
      */
     public void setTire() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        final Timer tireTimer = new Timer();
 
-                final Timer tireTimer = new Timer();
+        try {
+            hitTire = true; // When car collides set to true
 
-                try {
-                    hitTire = true; // When car collides set to true
-
-                    tireTimer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            // When timer runs set to false and turn off timer
-                            hitTire = false;
-                            tireTimer.cancel();
-                        }
-                    }, 10000, 1); // Shuts off after 10 sec
-                } catch (Exception e) {
-                    tireTimer.cancel(); // Turn off timer if something goes wrong
+            tireTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // When timer runs set to false and turn off timer
+                    hitTire = false;
+                    tireTimer.cancel();
                 }
-            }
-        }).start();
+            }, 10000, 1); // Shuts off after 10 sec
+        } catch (Exception e) {
+            tireTimer.cancel(); // Turn off timer if something goes wrong
+        }
     }
 
     /**
@@ -474,7 +481,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         actors.clear();
         initWorld();
     }
-
     /**
      * Paint the player's current score onto the gameplay screen
      *
@@ -866,32 +872,30 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
         } // End V
         else if (e.getKeyChar() == '1') {
-
+        }
         if (gameState == eGameState.GS_Customizations) {
             System.out.println("setting car 1");
             carType = 1;
-        }} else if (e.getKeyChar() == '2') {
-
+        } else if (e.getKeyChar() == '2') {
+        }
         if (gameState == eGameState.GS_Customizations) {
             System.out.println("setting car 2");
             carType = 2;
-        }} else if (e.getKeyChar() == '3') {
-
+        } else if (e.getKeyChar() == '3') {
+        }
         if (gameState == eGameState.GS_Customizations) {
             System.out.println("setting car 3");
             carType = 3;
-        }} else if (e.getKeyChar() == '4') {
-
+        } else if (e.getKeyChar() == '4') {
+        }
         if (gameState == eGameState.GS_Customizations) {
             System.out.println("setting car 4");
             carType = 4;
-        }} else if (e.getKeyChar() == '5') {
-
-            if (gameState == eGameState.GS_Customizations) {
-                System.out.println("setting car 5");
-                carType = 5;
-                //   resetGame();
-            }
+        } else if (e.getKeyChar() == '5') {
+        }
+        if (gameState == eGameState.GS_Customizations) {
+            System.out.println("setting car 5");
+            carType = 5;
         }
     }
 
