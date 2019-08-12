@@ -5,15 +5,13 @@ import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 
 public class ResourceLoader implements ImageObserver {
 
@@ -36,6 +34,27 @@ public class ResourceLoader implements ImageObserver {
 			sound.stop();
 		}
 
+	}
+	public  void loopSound(String name) {
+		try {
+			File yourFile;
+			AudioInputStream stream;
+			AudioFormat format;
+			DataLine.Info info;
+			Clip clip;
+			URL url = getClass().getClassLoader().getResource("res/" + name);
+			String decoded = URLDecoder.decode(url.getPath(), "UTF-8");
+			yourFile = new File(decoded);
+			stream = AudioSystem.getAudioInputStream(yourFile);
+			format = stream.getFormat();
+			info = new DataLine.Info(Clip.class, format);
+			clip = (Clip) AudioSystem.getLine(info);
+			clip.open(stream);
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public AudioClip getSound(String name) {

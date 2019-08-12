@@ -58,10 +58,13 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Car car;
     private int carType;
 
+
     private int score;
     private boolean hitBlood = false;
     private boolean hitTire = false;
     private boolean isPaused = false;
+
+    private Timer tigerTimer = new Timer();
 
     private eGameState gameState;
 
@@ -126,10 +129,11 @@ public class MooseTheGame extends Stage implements KeyListener {
         trackScore();
         gameState = eGameState.GS_MainMenu;
 
-        //    loopSound("explosion.wav");
+        ResourceLoader.getInstance().loopSound("hmm.wav");
 
 
         while (isVisible()) {
+
 
 
             long startTime = System.currentTimeMillis();
@@ -239,12 +243,14 @@ public class MooseTheGame extends Stage implements KeyListener {
             if (actors.get(i) instanceof Timbit) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
                     car.gainHealth(15);
+                    actors.get(i).playSound("bite.wav");
                     actors.get(i).setMarkedForRemoval(true);
                 }
             }
 
             if (actors.get(i) instanceof TigerBlood) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    actors.get(i).playSound("powerUp.wav");
                     setTigerBlood();
                     actors.get(i).setMarkedForRemoval(true);
                 }
@@ -268,6 +274,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             if (actors.get(i) instanceof Tire) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    actors.get(i).playSound("impact.wav");
                     setTire();
                     actors.get(i).setMarkedForRemoval(true);
                 }
@@ -286,6 +293,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
             if (actors.get(i) instanceof EnemyCar) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    actors.get(i).playSound("explosion.wav");
                     factList = getFact();
                     saveScore(score);
                     gameState = eGameState.GS_GameOver;
@@ -299,13 +307,13 @@ public class MooseTheGame extends Stage implements KeyListener {
      *
      * @param name
      */
-    public void loopSound(final String name) {
-        new Thread(new Runnable() {
-            public void run() {
-                ResourceLoader.getInstance().getSound(name).loop();
-            }
-        }).start();
-    }
+//    public void loopSound(final String name) {
+//        new Thread(new Runnable() {
+//            public void run() {
+//                ResourceLoader.getInstance().getSound(name).loop();
+//            }
+//        }).start();
+//    }
 
     /**
      * Paint the Gameplay Screen
@@ -385,6 +393,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                 actors.add(tigerBlood);
                 break;
             case 5:
+
                 PotHole potHole = new PotHole(this);
                 actors.add(potHole);
                 break;
@@ -398,6 +407,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                 EnemyCar enemyCar = new EnemyCar(this, enemyCarType, lane);
                 actors.add(enemyCar);
                 break;
+
         }
     }
 
@@ -470,6 +480,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
     }
 
+
     /**
      * Reset current game
      */
@@ -478,9 +489,13 @@ public class MooseTheGame extends Stage implements KeyListener {
         score = 0;
         hitBlood = false;
         hitTire = false;
+        tigerTimer.cancel();
+        //tireTimer.cancel();
+        //timer.cancel();
         actors.clear();
         initWorld();
     }
+
     /**
      * Paint the player's current score onto the gameplay screen
      *
@@ -872,30 +887,34 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
         } // End V
         else if (e.getKeyChar() == '1') {
-        }
+
         if (gameState == eGameState.GS_Customizations) {
             System.out.println("setting car 1");
             carType = 1;
-        } else if (e.getKeyChar() == '2') {
-        }
-        if (gameState == eGameState.GS_Customizations) {
-            System.out.println("setting car 2");
-            carType = 2;
+        }} else if (e.getKeyChar() == '2') {
+
+            if (gameState == eGameState.GS_Customizations) {
+                System.out.println("setting car 2");
+                carType = 2;
+            }
         } else if (e.getKeyChar() == '3') {
-        }
-        if (gameState == eGameState.GS_Customizations) {
-            System.out.println("setting car 3");
-            carType = 3;
+
+            if (gameState == eGameState.GS_Customizations) {
+                System.out.println("setting car 3");
+                carType = 3;
+            }
         } else if (e.getKeyChar() == '4') {
-        }
-        if (gameState == eGameState.GS_Customizations) {
-            System.out.println("setting car 4");
-            carType = 4;
+
+            if (gameState == eGameState.GS_Customizations) {
+                System.out.println("setting car 4");
+                carType = 4;
+            }
         } else if (e.getKeyChar() == '5') {
-        }
-        if (gameState == eGameState.GS_Customizations) {
-            System.out.println("setting car 5");
-            carType = 5;
+
+            if (gameState == eGameState.GS_Customizations) {
+                System.out.println("setting car 5");
+                carType = 5;
+            }
         }
     }
 
