@@ -4,9 +4,17 @@ import game.Stage;
 
 import java.util.Random;
 
+/**
+ * Coffee class that extends Actor
+ * Instantiates a Coffee power-up in Moose: The Game
+ */
 public class Coffee extends Actor {
     private Random randy = new Random();
 
+    /**
+     * Constructor for the Coffee object
+     * @param canvas
+     */
     public Coffee(Stage canvas) {
         super(canvas, 80, 80, 80, 80);
 

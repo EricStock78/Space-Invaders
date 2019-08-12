@@ -2,8 +2,19 @@ package actors;
 
 import game.Stage;
 
+/**
+ * EnemyCar class that extends Actor
+ * Instantiates an EnemyCar hazard in Moose: The Game
+ */
 public class EnemyCar extends Actor {
 
+    /**
+     * Constructor for the EnemyCar object
+     * Type of car is chosen at random
+     * @param canvas
+     * @param enemyCarType
+     * @param lane
+     */
     public EnemyCar(Stage canvas, int enemyCarType, int lane) {
         super(canvas, 145, 73, 145, 73);
 

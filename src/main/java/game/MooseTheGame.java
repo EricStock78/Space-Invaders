@@ -22,7 +22,7 @@ import actors.*;
  * educational component to raise road safety awareness in Newfoundland. After unsafe driving causes the player to lose,
  * they are presented with a driving safety tip on the game over screen.
  * Co-developed by
- * Emma Troke, Gabe Walsh, Greg Tracy
+ * Emma Troke, Gabe Walsh, Greg Tracey
  */
 
 
