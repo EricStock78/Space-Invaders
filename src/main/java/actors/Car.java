@@ -10,14 +10,14 @@ public class Car extends Actor implements KeyboardControllable {
     private boolean isWASD; // for switching between controls
     private final int MAXHEALTH;
     private int currentHealth;
-    private String carString;
+
 
 
 
     public Car(Stage stage,int carType) {
-        //carType = CarType.car1;
 
         super(stage, 145, 73, 145, 73);
+
 
         switch (carType){
             case 1:sprites = new String[]{"car1.png"};
@@ -128,6 +128,7 @@ public class Car extends Actor implements KeyboardControllable {
             currentHealth += health;
         }
     }
+
 
 
 }
