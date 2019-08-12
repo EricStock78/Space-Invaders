@@ -8,10 +8,13 @@ import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.File;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 
 public class ResourceLoader implements ImageObserver {
 
@@ -34,6 +37,29 @@ public class ResourceLoader implements ImageObserver {
 		}
 		
 	}
+
+	public void loopSound(String name) {
+			try {
+				File yourFile;
+				AudioInputStream stream;
+				AudioFormat format;
+				DataLine.Info info;
+				Clip clip;
+				URL url = getClass().getClassLoader().getResource("res/" + name);
+				String decoded = URLDecoder.decode(url.getPath(), "UTF-8");
+				yourFile = new File(decoded);
+				stream = AudioSystem.getAudioInputStream(yourFile);
+				format = stream.getFormat();
+				info = new DataLine.Info(Clip.class, format);
+				clip = (Clip) AudioSystem.getLine(info);
+				clip.open(stream);
+				clip.loop(Clip.LOOP_CONTINUOUSLY);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+	}
+
 	public AudioClip getSound(String name) {
 		AudioClip sound = sounds.get(name);
 		if (null != sound)

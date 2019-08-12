@@ -274,7 +274,8 @@ public class Invaders extends Stage implements KeyListener {
 
 
 	public void game() {
-		loopSound("music.wav");
+		//loopSound("music.wav");
+		ResourceLoader.getInstance().loopSound("music.wav");
 		usedTime= 0;
 		while(isVisible()) {
 			long startTime = System.currentTimeMillis();
