@@ -22,6 +22,5 @@ public class Tire extends Actor {
         super.update();
         posX += vx;
         posY += vy;
-        if (posX == 0) {setMarkedForRemoval(true);}
     }
 }
