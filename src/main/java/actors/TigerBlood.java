@@ -16,7 +16,7 @@ public class TigerBlood extends Actor{
 
         posX = 1000;
         posY =400;
-        //posY = randy.nextInt(600);
+
     }
 
     public void update() {
