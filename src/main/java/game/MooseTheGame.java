@@ -21,7 +21,6 @@ import actors.*;
  * highest score possible, which increases by 10 every 2 seconds the player is alive. The game also includes an
  * educational component to raise road safety awareness in Newfoundland. After unsafe driving causes the player to lose,
  * they are presented with a driving safety tip on the game over screen.
- * <p>
  * Co-developed by
  * Emma Troke, Gabe Walsh, Greg Tracy
  */
@@ -103,7 +102,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy = getBufferStrategy();
         requestFocus();
         initWorld();
-        ResourceLoader.createFont();
+        ResourceLoader.createFont(this);
 
         keyPressedHandlerLeft = new InputHandler(this, car);
         keyPressedHandlerLeft.action = InputHandler.Action.PRESS;
@@ -126,12 +125,12 @@ public class MooseTheGame extends Stage implements KeyListener {
         score = 0;
         trackScore();
         gameState = eGameState.GS_MainMenu;
-        if (sound) {
-            loopSound("music.wav");
-        }
+
+        //    loopSound("explosion.wav");
+
 
         while (isVisible()) {
-            System.out.println(carType);
+
 
             long startTime = System.currentTimeMillis();
 
@@ -186,6 +185,9 @@ public class MooseTheGame extends Stage implements KeyListener {
      */
 
     public void initWorld() {
+        if (carType == 0) {
+            carType = 1;
+        }
 
         car = new Car(this, carType);
         actors.add(car);
@@ -226,6 +228,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             if (actors.get(i) instanceof Moose) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    actors.get(i).playSound("explosion.wav");
+
                     factList = getFact();
                     saveScore(score);
                     gameState = eGameState.GS_GameOver;
@@ -314,10 +318,11 @@ public class MooseTheGame extends Stage implements KeyListener {
         //load subimage from the playBtn
 
         //paint the actors
-        for (int i = 0; i < actors.size(); i++) {
+        for (int i = 1; i < actors.size(); i++) {
             Actor actor = actors.get(i);
             actor.paint(g);
         }
+        car.paint(g);
 
         // Paint the graphics
         paintScore(g, score);
@@ -378,6 +383,8 @@ public class MooseTheGame extends Stage implements KeyListener {
                 Tire tire = new Tire(this);
                 actors.add(tire);
                 break;
+            //  default:tire = new Tire(this);
+            // actors.add(tire);
         }
     }
 
@@ -432,22 +439,28 @@ public class MooseTheGame extends Stage implements KeyListener {
      * Sets behaviour for when car collides with a tire
      */
     public void setTire() {
-        final Timer tireTimer = new Timer();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-        try {
-            hitTire = true; // When car collides set to true
+                final Timer tireTimer = new Timer();
 
-            tireTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    // When timer runs set to false and turn off timer
-                    hitTire = false;
-                    tireTimer.cancel();
+                try {
+                    hitTire = true; // When car collides set to true
+
+                    tireTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            // When timer runs set to false and turn off timer
+                            hitTire = false;
+                            tireTimer.cancel();
+                        }
+                    }, 10000, 1); // Shuts off after 10 sec
+                } catch (Exception e) {
+                    tireTimer.cancel(); // Turn off timer if something goes wrong
                 }
-            }, 10000, 1); // Shuts off after 10 sec
-        } catch (Exception e) {
-            tireTimer.cancel(); // Turn off timer if something goes wrong
-        }
+            }
+        }).start();
     }
 
     /**
@@ -461,6 +474,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         actors.clear();
         initWorld();
     }
+
     /**
      * Paint the player's current score onto the gameplay screen
      *
@@ -852,30 +866,32 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
         } // End V
         else if (e.getKeyChar() == '1') {
-        }
+
         if (gameState == eGameState.GS_Customizations) {
             System.out.println("setting car 1");
             carType = 1;
-        } else if (e.getKeyChar() == '2') {
-        }
+        }} else if (e.getKeyChar() == '2') {
+
         if (gameState == eGameState.GS_Customizations) {
             System.out.println("setting car 2");
             carType = 2;
-        } else if (e.getKeyChar() == '3') {
-        }
+        }} else if (e.getKeyChar() == '3') {
+
         if (gameState == eGameState.GS_Customizations) {
             System.out.println("setting car 3");
             carType = 3;
-        } else if (e.getKeyChar() == '4') {
-        }
+        }} else if (e.getKeyChar() == '4') {
+
         if (gameState == eGameState.GS_Customizations) {
             System.out.println("setting car 4");
             carType = 4;
-        } else if (e.getKeyChar() == '5') {
-        }
-        if (gameState == eGameState.GS_Customizations) {
-            System.out.println("setting car 5");
-            carType = 5;
+        }} else if (e.getKeyChar() == '5') {
+
+            if (gameState == eGameState.GS_Customizations) {
+                System.out.println("setting car 5");
+                carType = 5;
+                //   resetGame();
+            }
         }
     }
 
