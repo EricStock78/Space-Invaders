@@ -2,10 +2,7 @@ package actors;
 
 import game.Stage;
 
-import java.util.Random;
-
 public class EnemyCar extends Actor {
-    private Random randy = new Random();
 
     public EnemyCar(Stage canvas, int enemyCarType, int lane) {
         super(canvas, 145, 73, 145, 73);
