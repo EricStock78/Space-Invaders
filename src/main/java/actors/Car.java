@@ -35,7 +35,7 @@ public class Car extends Actor implements KeyboardControllable {
         frameSpeed = 35;
         actorSpeed = 10;
         posX = Stage.WIDTH / 2 - 128;
-        posY = Stage.HEIGHT / 2 - 128;
+        posY = Stage.HEIGHT / 2 + 28;
     }
 
     public void update() {
