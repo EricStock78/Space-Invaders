@@ -37,8 +37,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         GS_GameOver,
         GS_Customizations,
         GS_HighScore,
-
-
     }
 
     private static final long serialVersionUID = 1L;
@@ -127,8 +125,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         trackScore();
         gameState = eGameState.GS_MainMenu;
 
-        //ResourceLoader.getInstance().loopSound("hmm.wav");
-
+        ResourceLoader.getInstance().loopSound("hmm.wav");
 
         while (isVisible()) {
 
@@ -242,7 +239,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             if (actors.get(i) instanceof TigerBlood) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
-                    actors.get(i).playSound("powerUp.wav");
+                    actors.get(i).playSound("tigger.wav");
                     setTigerBlood();
                     actors.get(i).setMarkedForRemoval(true);
                 }
@@ -250,6 +247,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             if (actors.get(i) instanceof PotHole) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    actors.get(i).playSound("rocky.wav");
                     if (hitTire) {
                         continue;
                     } else {
@@ -453,7 +451,7 @@ public class MooseTheGame extends Stage implements KeyListener {
                     hitTire = false;
                     tireTimer.cancel();
                 }
-            }, 10000, 1); // Shuts off after 10 sec
+            }, 6000, 1); // Shuts off after 6 sec
         } catch (Exception e) {
             tireTimer.cancel(); // Turn off timer if something goes wrong
         }
