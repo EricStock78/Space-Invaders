@@ -35,12 +35,10 @@ public class MooseTheGame extends Stage implements KeyListener {
         GS_Paused,
         GS_MainMenu,
         GS_GameOver,
-        GS_Options,
-        GS_AudioOptions,
         GS_Customizations,
         GS_HighScore,
-        GS_Controls,
-        GS_VideoOptions
+
+
     }
 
     private static final long serialVersionUID = 1L;
@@ -129,11 +127,10 @@ public class MooseTheGame extends Stage implements KeyListener {
         trackScore();
         gameState = eGameState.GS_MainMenu;
 
-        ResourceLoader.getInstance().loopSound("hmm.wav");
+        //ResourceLoader.getInstance().loopSound("hmm.wav");
 
 
         while (isVisible()) {
-
 
 
             long startTime = System.currentTimeMillis();
@@ -162,18 +159,13 @@ public class MooseTheGame extends Stage implements KeyListener {
                 paintMainMenu();
             } else if (gameState == eGameState.GS_GameOver) {
                 paintGameOver();
-            } else if (gameState == eGameState.GS_Options) {
-                paintOptionsMenu();
-            } else if (gameState == eGameState.GS_VideoOptions) {
-                paintVideoOptionsMenu();
+
+
             } else if (gameState == eGameState.GS_Paused) {
                 paintPauseMenu();
             } else if (gameState == eGameState.GS_Customizations) {
                 paintCustomizationMenu();
-            } else if (gameState == eGameState.GS_AudioOptions) {
-                paintAudioOptionsMenu();
-            } else if (gameState == eGameState.GS_Controls) {
-                paintControlsOptionsMenu();
+
             } else if (gameState == eGameState.GS_HighScore) {
                 paintHighscoreMenu();
             }
@@ -282,6 +274,7 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             if (actors.get(i) instanceof Coffee) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    actors.get(i).playSound("slurp.wav");
                     if (hitBlood) {
                         score += 10;
                     } else {
@@ -301,20 +294,6 @@ public class MooseTheGame extends Stage implements KeyListener {
             }
         }
     }
-
-    /**
-     * Loop the background music
-     *
-     * @param name
-     */
-//    public void loopSound(final String name) {
-//        new Thread(new Runnable() {
-//            public void run() {
-//                ResourceLoader.getInstance().getSound(name).loop();
-//            }
-//        }).start();
-//    }
-
     /**
      * Paint the Gameplay Screen
      */
@@ -490,8 +469,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         hitBlood = false;
         hitTire = false;
         tigerTimer.cancel();
-        //tireTimer.cancel();
-        //timer.cancel();
         actors.clear();
         initWorld();
     }
@@ -541,8 +518,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.drawImage(ResourceLoader.getInstance().getSprite("playButton.png"), 18, 250, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("highscoreButton.png"), 343, 250, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("customizeButton.png"), 667, 250, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("optionsButton.png"), 165, 380, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 515, 380, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 343, 380, this);
 
         strategy.show();
     }
@@ -555,9 +531,25 @@ public class MooseTheGame extends Stage implements KeyListener {
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
-
+        drawBox(g);
+        g.setColor(new Color(0, 0, 0));
+        int stringx=300;
+        g.setFont(new Font("BitPotionExt", 0, 50));
+        g.drawString("press 1 for:", stringx, 225);
+        g.drawString("press 2 for:", stringx, 275);
+        g.drawString("press 3 for:", stringx, 325);
+        g.drawString("press 4 for:", stringx, 375);
+        g.drawString("press 5 for:", stringx, 425);
         paintHeader(g, "customizeTitle");
         paintBackButton(g);
+        int carx=500;
+
+        g.drawImage(ResourceLoader.getInstance().getSprite("car1.png"), carx, 200, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("car2.png"), carx, 250, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("car3.png"), carx, 300, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("car4.png"), carx, 350, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("car5.png"), carx, 400, this);
+
 
         strategy.show();
     }
@@ -582,69 +574,6 @@ public class MooseTheGame extends Stage implements KeyListener {
     }
 
     /**
-     * Paint the Options Menu
-     */
-    public void paintOptionsMenu() {
-        onOptionsMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        paintHeader(g, "optionsTitle");
-        paintBackButton(g);
-        g.drawImage(ResourceLoader.getInstance().getSprite("controlsButton.png"), 18, 300, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("videoButton.png"), 343, 300, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("audioButton.png"), 667, 300, this);
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the Audio Options Menu
-     */
-    public void paintAudioOptionsMenu() {
-        onAudioOptionsMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        paintHeader(g, "audioTitle");
-        paintBackButton(g);
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the Video Options Menu
-     */
-    public void paintVideoOptionsMenu() {
-        onVideoOptionsMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        paintHeader(g, "videoTitle");
-        paintBackButton(g);
-
-        strategy.show();
-    }
-
-    /**
-     * Paint the Control Options Menu
-     */
-    public void paintControlsOptionsMenu() {
-        onControlsOptionsMenu();
-        Graphics g = strategy.getDrawGraphics();
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        paintHeader(g, "controlsTitle");
-        paintBackButton(g);
-
-        strategy.show();
-    }
-
-    /**
      * Paint the Highscore Menu
      */
     public void paintHighscoreMenu() throws IOException {
@@ -664,7 +593,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 620, 330, this);
 
 
-        // TODO: 2019-08-10 find a better way to make the strings for the score
+
         String frist = "1st: " + Integer.toString(getScores().get(3));
         String second = "2nd: " + Integer.toString(getScores().get(2));
         String third = "3rd: " + Integer.toString(getScores().get(1));
@@ -813,25 +742,16 @@ public class MooseTheGame extends Stage implements KeyListener {
                 isPaused = false;
                 gameState = eGameState.GS_Playing;
             }
-        } else if (e.getKeyChar() == 'A' || e.getKeyChar() == 'a') {
-            if (gameState == eGameState.GS_Options) {
-                gameState = eGameState.GS_AudioOptions;
-            }
-        } // End A
+        }  // End A
 
         else if (e.getKeyChar() == 'B' || e.getKeyChar() == 'b') {
-            if (gameState == eGameState.GS_Options || gameState == eGameState.GS_Customizations || gameState == eGameState.GS_HighScore) {
+            if ( gameState == eGameState.GS_Customizations || gameState == eGameState.GS_HighScore) {
                 gameState = eGameState.GS_MainMenu;
-            } else if (gameState == eGameState.GS_Controls || gameState == eGameState.GS_AudioOptions
-                    || gameState == eGameState.GS_VideoOptions) {
-                gameState = eGameState.GS_Options;
             }
         } // End B
 
         else if (e.getKeyChar() == 'C' || e.getKeyChar() == 'c') {
             if (gameState == eGameState.GS_MainMenu) {
-                gameState = eGameState.GS_Customizations;
-            } else if (gameState == eGameState.GS_Options) {
                 gameState = eGameState.GS_Customizations;
             }
         } // End C
@@ -847,15 +767,10 @@ public class MooseTheGame extends Stage implements KeyListener {
                 gameState = eGameState.GS_MainMenu;
             } else if (gameState == eGameState.GS_Paused) {
                 gameState = eGameState.GS_MainMenu;
-            } else if (gameState == eGameState.GS_AudioOptions)
-                sound = false;
+            }
         } // End M
 
-        else if (e.getKeyChar() == 'O' || e.getKeyChar() == 'o') {
-            if (gameState == eGameState.GS_MainMenu) {
-                gameState = eGameState.GS_Options;
-            }
-        } // End O
+
 
         else if (e.getKeyChar() == 'P' || e.getKeyChar() == 'p') {
             if (gameState == eGameState.GS_MainMenu) {
@@ -878,41 +793,30 @@ public class MooseTheGame extends Stage implements KeyListener {
                 isPaused = false;
                 gameState = eGameState.GS_Playing;
             }
-        } // End R
-
-
-        else if (e.getKeyChar() == 'V' || e.getKeyChar() == 'v') {
-            if (gameState == eGameState.GS_Options) {
-                gameState = eGameState.GS_VideoOptions;
-            }
-        } // End V
+        }
         else if (e.getKeyChar() == '1') {
 
-        if (gameState == eGameState.GS_Customizations) {
-            System.out.println("setting car 1");
-            carType = 1;
-        }} else if (e.getKeyChar() == '2') {
+            if (gameState == eGameState.GS_Customizations) {
+                carType = 1;
+            }
+        } else if (e.getKeyChar() == '2') {
 
             if (gameState == eGameState.GS_Customizations) {
-                System.out.println("setting car 2");
                 carType = 2;
             }
         } else if (e.getKeyChar() == '3') {
 
             if (gameState == eGameState.GS_Customizations) {
-                System.out.println("setting car 3");
                 carType = 3;
             }
         } else if (e.getKeyChar() == '4') {
 
             if (gameState == eGameState.GS_Customizations) {
-                System.out.println("setting car 4");
                 carType = 4;
             }
         } else if (e.getKeyChar() == '5') {
 
             if (gameState == eGameState.GS_Customizations) {
-                System.out.println("setting car 5");
                 carType = 5;
             }
         }
