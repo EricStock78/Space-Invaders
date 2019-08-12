@@ -7,24 +7,33 @@ import java.util.ArrayList;
 
 public class Car extends Actor implements KeyboardControllable {
     private boolean up, down, left, right;
+    private boolean w,a,s,d;
     private boolean isWASD; // for switching between controls
     private final int MAXHEALTH;
     private int currentHealth;
 
 
+    public void setWASD(boolean WASD) {
+        isWASD = WASD;
+    }
 
-
-    public Car(Stage stage,int carType) {
+    public Car(Stage stage, int carType) {
 
         super(stage, 145, 73, 145, 73);
+        isWASD=true;
 
 
         switch (carType){
             case 1:sprites = new String[]{"car1.png"};
+            break;
             case 2:sprites = new String[]{"car2.png"};
+            break;
             case 3:sprites = new String[]{"car3.png"};
+            break;
             case 4:sprites = new String[]{"car4.png"};
+            break;
             case 5:sprites = new String[]{"car5.png"};
+            break;
             default:sprites = new String[]{"car1.png"};
         }
 
@@ -47,6 +56,16 @@ public class Car extends Actor implements KeyboardControllable {
     protected void updateSpeed() {
         vx = 0;
         vy = 0;
+        if(isWASD){
+            if (s)
+                vy = actorSpeed;
+            if (w)
+                vy = -actorSpeed;
+            if (a)
+                vx = -actorSpeed + 5;
+            if (d)
+                vx = actorSpeed;
+        }
         if (down)
             vy = actorSpeed;
         if (up)
@@ -82,6 +101,20 @@ public class Car extends Actor implements KeyboardControllable {
             case KeyEvent.VK_RIGHT:
                 right = false;
                 break;
+            case KeyEvent.VK_W:
+                w = false;
+                break;
+            //*/
+            case KeyEvent.VK_A:
+                a = false;
+                break;
+            case KeyEvent.VK_D:
+                d = false;
+                break;
+            ///*
+            case KeyEvent.VK_S:
+                s = false;
+                break;
         }
     }
 
@@ -101,6 +134,20 @@ public class Car extends Actor implements KeyboardControllable {
             ///*
             case KeyEvent.VK_DOWN:
                 down = true;
+                break;
+                case KeyEvent.VK_W:
+                w = true;
+                break;
+            //*/
+            case KeyEvent.VK_A:
+                a = true;
+                break;
+            case KeyEvent.VK_D:
+                d = true;
+                break;
+            ///*
+            case KeyEvent.VK_S:
+                s = true;
                 break;
         }
     }

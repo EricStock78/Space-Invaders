@@ -21,9 +21,8 @@ import actors.*;
  * highest score possible, which increases by 10 every 2 seconds the player is alive. The game also includes an
  * educational component to raise road safety awareness in Newfoundland. After unsafe driving causes the player to lose,
  * they are presented with a driving safety tip on the game over screen.
- * <p>
  * Co-developed by
- * Emma Troke, Gabe Walsh, Greg Tracey
+ * Emma Troke, Gabe Walsh, Greg Tracy
  */
 
 
@@ -103,7 +102,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         strategy = getBufferStrategy();
         requestFocus();
         initWorld();
-        ResourceLoader.createFont();
+        ResourceLoader.createFont(this);
 
         keyPressedHandlerLeft = new InputHandler(this, car);
         keyPressedHandlerLeft.action = InputHandler.Action.PRESS;
@@ -126,12 +125,12 @@ public class MooseTheGame extends Stage implements KeyListener {
         score = 0;
         trackScore();
         gameState = eGameState.GS_MainMenu;
-        if (sound) {
-            loopSound("music.wav");
-        }
+
+        //    loopSound("explosion.wav");
+
 
         while (isVisible()) {
-            System.out.println(carType);
+
 
             long startTime = System.currentTimeMillis();
 
@@ -186,6 +185,9 @@ public class MooseTheGame extends Stage implements KeyListener {
      */
 
     public void initWorld() {
+        if (carType == 0) {
+            carType = 1;
+        }
 
         car = new Car(this, carType);
         actors.add(car);
@@ -226,6 +228,8 @@ public class MooseTheGame extends Stage implements KeyListener {
 
             if (actors.get(i) instanceof Moose) {
                 if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    actors.get(i).playSound("explosion.wav");
+
                     factList = getFact();
                     saveScore(score);
                     gameState = eGameState.GS_GameOver;
@@ -325,6 +329,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             Actor actor = actors.get(i);
             actor.paint(g);
         }
+        car.paint(g);
 
         // Paint the graphics
         paintScore(g, score);
@@ -363,6 +368,7 @@ public class MooseTheGame extends Stage implements KeyListener {
             case 1:
                 Moose moose = new Moose(this);
                 actors.add(moose);
+
                 break;
             case 2:
                 Timbit timbit = new Timbit(this);
