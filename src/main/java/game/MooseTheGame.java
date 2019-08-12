@@ -23,7 +23,7 @@ import actors.*;
  * they are presented with a driving safety tip on the game over screen.
  * <p>
  * Co-developed by
- * Emma Troke, Gabe Walsh, Greg Tracy
+ * Emma Troke, Gabe Walsh, Greg Tracey
  */
 
 
@@ -280,6 +280,13 @@ public class MooseTheGame extends Stage implements KeyListener {
                     actors.get(i).setMarkedForRemoval(true);
                 }
             }
+            if (actors.get(i) instanceof EnemyCar) {
+                if (car.getBounds().intersects(actors.get(i).getBounds())) {
+                    factList = getFact();
+                    saveScore(score);
+                    gameState = eGameState.GS_GameOver;
+                }
+            }
         }
     }
 
@@ -348,13 +355,14 @@ public class MooseTheGame extends Stage implements KeyListener {
             picker = 4;
         } else if (randNum > 415 && randNum < 430) {
             picker = 6;
+        } else if (randNum > 430 && randNum < 445) {
+            picker = 7;
         }
 
         switch (picker) {
             case 1:
                 Moose moose = new Moose(this);
                 actors.add(moose);
-
                 break;
             case 2:
                 Timbit timbit = new Timbit(this);
@@ -377,6 +385,12 @@ public class MooseTheGame extends Stage implements KeyListener {
             case 6:
                 Tire tire = new Tire(this);
                 actors.add(tire);
+                break;
+            case 7:
+                int enemyCarType = randy.nextInt(5);
+                int lane = randy.nextInt(2);
+                EnemyCar enemyCar = new EnemyCar(this, enemyCarType, lane);
+                actors.add(enemyCar);
                 break;
         }
     }
