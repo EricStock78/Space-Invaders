@@ -27,6 +27,7 @@ import actors.*;
 
 
 public class MooseTheGame extends Stage implements KeyListener {
+
     /**
      * Enum Method used for changing the Game States
      */
@@ -44,7 +45,6 @@ public class MooseTheGame extends Stage implements KeyListener {
     private InputHandler keyPressedHandlerLeft;
     private InputHandler keyReleasedHandlerLeft;
     private ArrayList<String> factList;
-    private boolean sound;
 
     public long usedTime; //time taken per game step
     public BufferStrategy strategy;     //double buffering strategy
@@ -54,13 +54,10 @@ public class MooseTheGame extends Stage implements KeyListener {
     private Car car;
     private int carType;
 
-
     private int score;
     private boolean hitBlood = false;
     private boolean hitTire = false;
     private boolean isPaused = false;
-
-    private Timer tigerTimer = new Timer();
 
     private eGameState gameState;
 
@@ -125,7 +122,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         trackScore();
         gameState = eGameState.GS_MainMenu;
 
-        ResourceLoader.getInstance().loopSound("hmm.wav");
+        ResourceLoader.getInstance().loopSound("mainTrack.wav");
 
         while (isVisible()) {
 
@@ -466,7 +463,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         score = 0;
         hitBlood = false;
         hitTire = false;
-        tigerTimer.cancel();
         actors.clear();
         initWorld();
     }
@@ -493,7 +489,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.fillRect(0, 0, getWidth(), getHeight());
         drawBox(g);
 
-        paintHeader(g, "goTitle");
+        g.drawImage(ResourceLoader.getInstance().getSprite("goTitle.png"), 190, 20, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("retryButton.png"), 18, 475, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 475, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 475, this);
@@ -512,7 +508,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        paintHeader(g, "title");
+        g.drawImage(ResourceLoader.getInstance().getSprite("title.png"), 190, 20, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("playButton.png"), 18, 250, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("highscoreButton.png"), 343, 250, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("customizeButton.png"), 667, 250, this);
@@ -529,25 +525,20 @@ public class MooseTheGame extends Stage implements KeyListener {
         Graphics g = strategy.getDrawGraphics();
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
-        drawBox(g);
-        g.setColor(new Color(0, 0, 0));
-        int stringx=300;
-        g.setFont(new Font("BitPotionExt", 0, 50));
-        g.drawString("press 1 for:", stringx, 225);
-        g.drawString("press 2 for:", stringx, 275);
-        g.drawString("press 3 for:", stringx, 325);
-        g.drawString("press 4 for:", stringx, 375);
-        g.drawString("press 5 for:", stringx, 425);
-        paintHeader(g, "customizeTitle");
-        paintBackButton(g);
-        int carx=500;
 
-        g.drawImage(ResourceLoader.getInstance().getSprite("car1.png"), carx, 200, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("car2.png"), carx, 250, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("car3.png"), carx, 300, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("car4.png"), carx, 350, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("car5.png"), carx, 400, this);
+        int x1 = 60;
+        int x2 = x1 + 310;
+        int x3 = x2 + 310;
+        int y1 = 200;
+        int y2 = y1 + 200;
 
+        g.drawImage(ResourceLoader.getInstance().getSprite("customizeTitle.png"), 190, 20, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("car1Button.png"), x1, y1, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("car2Button.png"), x2, y1, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("car3Button.png"), x3, y1, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("car4Button.png"), x1, y2, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("car5Button.png"), x2, y2, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 480, this);
 
         strategy.show();
     }
@@ -563,7 +554,7 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        paintHeader(g, "pausedTitle");
+        g.drawImage(ResourceLoader.getInstance().getSprite("pausedTitle.png"), 190, 20, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("resumeButton.png"), 18, 300, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("mainButton.png"), 343, 300, this);
         g.drawImage(ResourceLoader.getInstance().getSprite("quitButton.png"), 667, 300, this);
@@ -580,22 +571,25 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
         drawBox(g);
+        int x1 = 300;
+        int x2 = 620;
+        int y1 = 210;
+        int y2 = 270;
+        int y3 = 330;
 
-        paintHeader(g, "highscoreTitle");
-        paintBackButton(g);
-        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 300, 210, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), 620, 210, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 300, 270, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), 620, 270, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 300, 330, this);
-        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), 620, 330, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("highscoreTitle.png"), 190, 20, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 490, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), x1, y1, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("goldCrown.png"), x2, y1, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), x1, y2, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("silverCrown.png"), x2, y2, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), x1, y3, this);
+        g.drawImage(ResourceLoader.getInstance().getSprite("bronzeCrown.png"), x2, y3, this);
 
-
-
-        String frist = "1st: " + Integer.toString(getScores().get(3));
-        String second = "2nd: " + Integer.toString(getScores().get(2));
-        String third = "3rd: " + Integer.toString(getScores().get(1));
-        String fourth = "4th: " + Integer.toString(getScores().get(0));
+        String frist = "1st: " + getScores().get(3);
+        String second = "2nd: " + getScores().get(2);
+        String third = "3rd: " + getScores().get(1);
+        String fourth = "4th: " + getScores().get(0);
 
         g.setColor(new Color(242, 124, 143));
         g.setFont(new Font("BitPotionExt", 0, 50));
@@ -643,14 +637,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         }
     }
 
-    public void paintBackButton(Graphics g) {
-        g.drawImage(ResourceLoader.getInstance().getSprite("backButton.png"), 715, 490, this);
-    }
-
-    public void paintHeader(Graphics g, String name) {
-        g.drawImage(ResourceLoader.getInstance().getSprite(name + ".png"), 190, 20, this);
-    }
-
     /**
      * Draw a box to write text in
      *
@@ -688,7 +674,6 @@ public class MooseTheGame extends Stage implements KeyListener {
         g.drawString("https://www.flr.gov.nl.ca/wildlife/moose_vehicle_awareness.html", 250, 440);
     }
 
-
     /**
      * Get a random fact
      *
@@ -697,6 +682,7 @@ public class MooseTheGame extends Stage implements KeyListener {
     public ArrayList<String> getFact() {
         ArrayList<String> factBuilder = new ArrayList<>();
         Random randy = new Random();
+
         int i = randy.nextInt(6);
 
         if (i == 0) {
@@ -726,110 +712,8 @@ public class MooseTheGame extends Stage implements KeyListener {
         return factBuilder;
     }
 
-    public void keyPressed(KeyEvent e) {
-        keyPressedHandlerLeft.handleInput(e);
-
-        if (e.getKeyCode() == KeyEvent.VK_K) {
-            Actor.debugCollision = !Actor.debugCollision;
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (gameState == eGameState.GS_Playing) {
-                gameState = eGameState.GS_Paused;
-            } else if (gameState == eGameState.GS_Paused) {
-                isPaused = false;
-                gameState = eGameState.GS_Playing;
-            }
-        }  // End A
-
-        else if (e.getKeyChar() == 'B' || e.getKeyChar() == 'b') {
-            if ( gameState == eGameState.GS_Customizations || gameState == eGameState.GS_HighScore) {
-                gameState = eGameState.GS_MainMenu;
-            }
-        } // End B
-
-        else if (e.getKeyChar() == 'C' || e.getKeyChar() == 'c') {
-            if (gameState == eGameState.GS_MainMenu) {
-                gameState = eGameState.GS_Customizations;
-            }
-        } // End C
-
-        else if (e.getKeyChar() == 'H' || e.getKeyChar() == 'h') {
-            if (gameState == eGameState.GS_MainMenu) {
-                gameState = eGameState.GS_HighScore;
-            }
-        } // End H
-
-        else if (e.getKeyChar() == 'M' || e.getKeyChar() == 'm') {
-            if (gameState == eGameState.GS_GameOver) {
-                gameState = eGameState.GS_MainMenu;
-            } else if (gameState == eGameState.GS_Paused) {
-                gameState = eGameState.GS_MainMenu;
-            }
-        } // End M
-
-
-
-        else if (e.getKeyChar() == 'P' || e.getKeyChar() == 'p') {
-            if (gameState == eGameState.GS_MainMenu) {
-                gameState = eGameState.GS_Playing;
-                resetGame();
-            }
-        } // End P
-
-        else if (e.getKeyChar() == 'Q' || e.getKeyChar() == 'q') {
-            if (gameState == eGameState.GS_MainMenu || gameState == eGameState.GS_Paused
-                    || gameState == eGameState.GS_GameOver) {
-                System.exit(0);
-            }
-        } // End Q
-
-        else if (e.getKeyChar() == 'R' || e.getKeyChar() == 'r') {
-            if (gameState == eGameState.GS_GameOver) {
-                resetGame();
-            } else if (gameState == eGameState.GS_Paused) {
-                isPaused = false;
-                gameState = eGameState.GS_Playing;
-            }
-        }
-        else if (e.getKeyChar() == '1') {
-
-            if (gameState == eGameState.GS_Customizations) {
-                carType = 1;
-            }
-        } else if (e.getKeyChar() == '2') {
-
-            if (gameState == eGameState.GS_Customizations) {
-                carType = 2;
-            }
-        } else if (e.getKeyChar() == '3') {
-
-            if (gameState == eGameState.GS_Customizations) {
-                carType = 3;
-            }
-        } else if (e.getKeyChar() == '4') {
-
-            if (gameState == eGameState.GS_Customizations) {
-                carType = 4;
-            }
-        } else if (e.getKeyChar() == '5') {
-
-            if (gameState == eGameState.GS_Customizations) {
-                carType = 5;
-            }
-        }
-    }
-
-
-    public void keyReleased(KeyEvent e) {
-        keyReleasedHandlerLeft.handleInput(e);
-    }
-
-    public void keyTyped(KeyEvent e) {
-    }
-
     /**
-     * Save the game score if it is bigger than the 4 highest scores
+     * Save the game score if it is higher than the 4 highest scores
      *
      * @param newScore Final game score
      * @throws IOException
@@ -895,4 +779,117 @@ public class MooseTheGame extends Stage implements KeyListener {
         mooseGame.game();
     }
 
+    /**
+     * Determine behaviour when a key is pressed
+     *
+     * @param e KeyEvent
+     */
+    public void keyPressed(KeyEvent e) {
+        keyPressedHandlerLeft.handleInput(e);
+
+        if (e.getKeyCode() == KeyEvent.VK_K) {
+            Actor.debugCollision = !Actor.debugCollision;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (gameState == eGameState.GS_Playing) {
+                gameState = eGameState.GS_Paused;
+            } else if (gameState == eGameState.GS_Paused) {
+                isPaused = false;
+                gameState = eGameState.GS_Playing;
+            }
+        }  // End A
+
+        else if (e.getKeyChar() == 'B' || e.getKeyChar() == 'b') {
+            if ( gameState == eGameState.GS_Customizations || gameState == eGameState.GS_HighScore) {
+                gameState = eGameState.GS_MainMenu;
+            }
+        } // End B
+
+        else if (e.getKeyChar() == 'C' || e.getKeyChar() == 'c') {
+            if (gameState == eGameState.GS_MainMenu) {
+                gameState = eGameState.GS_Customizations;
+            }
+        } // End C
+
+        else if (e.getKeyChar() == 'H' || e.getKeyChar() == 'h') {
+            if (gameState == eGameState.GS_MainMenu) {
+                gameState = eGameState.GS_HighScore;
+            }
+        } // End H
+
+        else if (e.getKeyChar() == 'M' || e.getKeyChar() == 'm') {
+            if (gameState == eGameState.GS_GameOver) {
+                gameState = eGameState.GS_MainMenu;
+            } else if (gameState == eGameState.GS_Paused) {
+                gameState = eGameState.GS_MainMenu;
+            }
+        } // End M
+
+        else if (e.getKeyChar() == 'P' || e.getKeyChar() == 'p') {
+            if (gameState == eGameState.GS_MainMenu) {
+                gameState = eGameState.GS_Playing;
+                resetGame();
+            }
+        } // End P
+
+        else if (e.getKeyChar() == 'Q' || e.getKeyChar() == 'q') {
+            if (gameState == eGameState.GS_MainMenu || gameState == eGameState.GS_Paused
+                    || gameState == eGameState.GS_GameOver) {
+                System.exit(0);
+            }
+        } // End Q
+
+        else if (e.getKeyChar() == 'R' || e.getKeyChar() == 'r') {
+            if (gameState == eGameState.GS_GameOver) {
+                resetGame();
+            }
+
+            else if (gameState == eGameState.GS_Paused) {
+                isPaused = false;
+                gameState = eGameState.GS_Playing;
+            }
+        } // End R
+
+        else if (e.getKeyChar() == '1') {
+            if (gameState == eGameState.GS_Customizations) {
+                carType = 1;
+            }
+
+        } // End 1
+
+        else if (e.getKeyChar() == '2') {
+            if (gameState == eGameState.GS_Customizations) {
+                carType = 2;
+            }
+        }  // End 2
+
+        else if (e.getKeyChar() == '3') {
+
+            if (gameState == eGameState.GS_Customizations) {
+                carType = 3;
+            }
+        } // End 3
+
+        else if (e.getKeyChar() == '4') {
+
+            if (gameState == eGameState.GS_Customizations) {
+                carType = 4;
+            }
+        } // End 4
+
+        else if (e.getKeyChar() == '5') {
+
+            if (gameState == eGameState.GS_Customizations) {
+                carType = 5;
+            }
+        } // End 5
+    }
+
+    public void keyReleased(KeyEvent e) {
+        keyReleasedHandlerLeft.handleInput(e);
+    }
+
+    public void keyTyped(KeyEvent e) {
+    }
 }
